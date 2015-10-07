@@ -244,8 +244,7 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path):
 #######################################################################
 def FSCOR_Process(FSCOR_list,FSCOR_document_path):
     #count = 0
-    dlist=[]
-    d2list= []
+    d_list = []
     dSAS_list=[]
     dSI_list = []
     dMI_list = []
@@ -253,117 +252,120 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path):
     d2MI_list = []
     d2SI_list = []
     for index in range(len(FSCOR_list)):
-        pdb_min = 0
+        pdb_min = 999999
         family1 = 0
         family2 = 0
-        ggp_pdb1 = 0
+        gap_pdb1 = 0
         gap_pdb2 = 0
         align = 0
-        for inner_index in range(index+1,len(FSCOR_list)):
-            file_document_name = FSCOR_list[index].get_pdb()+'_to_'+FSCOR_list[inner_index].get_pdb()
+        for inner_index in range(len(FSCOR_list)):
+            if(index!=inner_index):
+                file_document_name = FSCOR_list[index].get_pdb()+'_to_'+FSCOR_list[inner_index].get_pdb()
 
-            file_document_name2 = FSCOR_list[inner_index].get_pdb()+'_to_'+FSCOR_list[index].get_pdb()
-            context_length = 0
-            min = 0
-            align_length = 0
-            gap_num_seq1 = 0
-            gap_num_seq2 = 0
-            compare_list=[]
-            temp_min = 0
-            
-            try:
-                with open(FSCOR_document_path+file_document_name+'/semiG_result.php','r') as file:
-                    for each_line in file:
-                        context_length+=1
-                times = context_length / 7
-                for loop in range(times):
-                    temp_RMSD = 0
-                    temp_gap_seq1 = 0
-                    temp_gap_seq2 = 0
-                    temp_length = 0
-                    with open(FSCOR_document_path+file_document_name+'/profit_log'+str(loop),'r') as file:
+                file_document_name2 = FSCOR_list[inner_index].get_pdb()+'_to_'+FSCOR_list[index].get_pdb()
+                context_length = 0
+                min = 0
+                align_length = 0
+                gap_num_seq1 = 0
+                gap_num_seq2 = 0
+                compare_list=[]
+                
+                try:
+                    with open(FSCOR_document_path+file_document_name+'/semiG_result.php','r') as file:
                         for each_line in file:
-                            if(each_line.find('RMS')!=-1):
-                                temp_RMSD = float(each_line.replace('RMS:',''))
-                    context_list = []
-                    with open(FSCOR_document_path+file_document_name+'/ori_ali_seq.pir'+str(loop),'r') as file:
-                        for each_line in file:
-                            context_list.append(each_line)
-                    seq1 = context_list[2]
-                    seq2 = context_list[5]
-                    for i in range(0,len(seq1)-1):
-                        if(seq1[i]=='-'):
-                            temp_gap_seq1+=1
-                        if(seq2[i]=='-'):
-                            temp_gap_seq2+=1
-                        if(seq1[i]!='-' and seq2[i]!='-'):
-                            temp_length+=1
-                    temp_gap_seq1 = len(seq1)-2 - temp_gap_seq1
-                    temp_gap_seq2 = len(seq2)-2 - temp_gap_seq2
-                    ###print file_document_name+' length='+str(temp_length)+' gap1='+str(temp_gap_seq1)+' gap2='+str(temp_gap_seq2)
-                    pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
-                    compare_list.append(pdb)
-
-            except:
-                with open(FSCOR_document_path+file_document_name2+'/semiG_result.php','r') as file:
-                    print file_document_name2
-                    for each_line in file:
-                        context_list.append(each_line)
-                        context_length+=1
+                            context_length+=1
                     times = context_length / 7
-                for loop in range(times):
-                    temp_RMSD = 0
-                    temp_gap_seq1 = 0
-                    temp_gap_seq2 = 0
-                    temp_length = 0
-                    with open(FSCOR_document_path+file_document_name2+'/profit_log'+str(loop),'r') as file:
-                        for each_line in file:
-                            if(each_line.find('RMS')!=-1):
-                                temp_RMSD = float(each_line.replace('RMS:',''))
-                    context_list = []
-                    with open(FSCOR_document_path+file_document_name2+'/ori_ali_seq.pir'+str(loop),'r') as file:
+                    for loop in range(times):
+                        temp_RMSD = 0
+                        temp_gap_seq1 = 0
+                        temp_gap_seq2 = 0
+                        temp_length = 0
+                        with open(FSCOR_document_path+file_document_name+'/profit_log'+str(loop),'r') as file:
+                            for each_line in file:
+                                if(each_line.find('RMS')!=-1):
+                                    temp_RMSD = float(each_line.replace('RMS:',''))
+                        context_list = []
+                        with open(FSCOR_document_path+file_document_name+'/ori_ali_seq.pir'+str(loop),'r') as file:
+                            for each_line in file:
+                                context_list.append(each_line)
+                        seq1 = context_list[2]
+                        seq2 = context_list[5]
+                        for i in range(0,len(seq1)-1):
+                            if(seq1[i]!='-'):
+                                temp_gap_seq1+=1
+                            if(seq2[i]!='-'):
+                                temp_gap_seq2+=1
+                            if(seq1[i]!='-' and seq2[i]!='-'):
+                                temp_length+=1
+                        temp_gap_seq1 = len(seq1)-2 - temp_gap_seq1
+                        temp_gap_seq2 = len(seq2)-2 - temp_gap_seq2
+                        ###print file_document_name+' length='+str(temp_length)+' gap1='+str(temp_gap_seq1)+' gap2='+str(temp_gap_seq2)
+                        pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
+                        compare_list.append(pdb)
+
+                except:
+                    with open(FSCOR_document_path+file_document_name2+'/semiG_result.php','r') as file:
+                        print file_document_name2
                         for each_line in file:
                             context_list.append(each_line)
-                    seq1 = context_list[2]
-                    seq2 = context_list[5]
-                    for i in range(0,len(seq1)-2):
-                        if(seq1[i]=='-'):
-                            temp_gap_seq1+=1
-                        if(seq2[i]=='-'):
-                            temp_gap_seq2+=1
-                        if(seq1[i]!='-' and seq2[i]!='-'):
-                            temp_length+=1
-                    temp_gap_seq1 = len(seq1)-2 - temp_gap_seq1
-                    temp_gap_seq2 = len(seq2)-2 - temp_gap_seq2
-                    ###print file_document_name2+' length = '+str(temp_length)+' gap1= '+str(temp_gap_seq1)+' gap2 ='+str(temp_gap_seq2)
-                    pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
-                    compare_list.append(pdb)
-            for i in range(len(compare_list)):
-                if(i == 0):
-                    min = compare_list[i].getRMSD()
-                    gap_num_seq1 = compare_list[i].get_gap1()
-                    gap_num_seq2 = compare_list[i].get_gap2()
-                    align_length = compare_list[i].get_align()
-                else:
+                            context_length+=1
+                        times = context_length / 7
+                    for loop in range(times):
+                        temp_RMSD = 0
+                        temp_gap_seq1 = 0
+                        temp_gap_seq2 = 0
+                        temp_length = 0
+                        with open(FSCOR_document_path+file_document_name2+'/profit_log'+str(loop),'r') as file:
+                            for each_line in file:
+                                if(each_line.find('RMS')!=-1):
+                                    temp_RMSD = float(each_line.replace('RMS:',''))
+                        context_list = []
+                        with open(FSCOR_document_path+file_document_name2+'/ori_ali_seq.pir'+str(loop),'r') as file:
+                            for each_line in file:
+                                context_list.append(each_line)
+                        seq1 = context_list[2]
+                        seq2 = context_list[5]
+                        for i in range(0,len(seq1)-2):
+                            if(seq1[i]!='-'):
+                                temp_gap_seq1+=1
+                            if(seq2[i]!='-'):
+                                temp_gap_seq2+=1
+                            if(seq1[i]!='-' and seq2[i]!='-'):
+                                temp_length+=1
+                        temp_gap_seq1 = len(seq1)-2 - temp_gap_seq1
+                        temp_gap_seq2 = len(seq2)-2 - temp_gap_seq2
+                        ###print file_document_name2+' length = '+str(temp_length)+' gap1= '+str(temp_gap_seq1)+' gap2 ='+str(temp_gap_seq2)
+                        pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
+                        compare_list.append(pdb)
+                min = compare_list[0].getRMSD()
+                gap_num_seq1 = compare_list[0].get_gap1()
+                gap_num_seq2 = compare_list[0].get_gap2()
+                align_length = compare_list[0].get_align()
+                for i in range(1,len(compare_list)):
                     if(min > compare_list[i].getRMSD()):
                         min = compare_list[i].getRMSD()
                         gap_num_seq1 = compare_list[i].get_gap1()
                         gap_num_seq2 = compare_list[i].get_gap2()
                         align_length = compare_list[i].get_align()
-            if(pdb_min >min):
-                pdb_min = min
-                gap_pdb1 = gap_num_seq1
-                gap_pdb2 = gap_num_seq2
-                align = align_length
-                family1 = index
-                family2 = inner_index
-
-        SAS = pdb_min * 100 / align
-        SAS = 0 - SAS
-        SI = pdb_min * MIN(gap_pdb1,gap_pdb2)/ align
-        SI = 0 - SI
-        MI = 1 - ((1+align)/(1+pdb_min/1.5)*(1+MIN(gap_pdb1,gap_pdb2)))
-        MI = 0 - MI
+                if(pdb_min >min):
+                    pdb_min = min
+                    gap_pdb1 = gap_num_seq1
+                    gap_pdb2 = gap_num_seq2
+                    align = align_length
+                    family1 = index
+                    family2 = inner_index
+        print str(family1)+' '+str(family2)
+        try:
+            SAS = pdb_min * 100 / align
+            SAS = 0 - SAS
+            SI = (pdb_min * MIN(gap_pdb1,gap_pdb2))/ align
+            SI = 0 - SI
+            MI = 1 - ((1+align)/((1+pdb_min/1.5)*(1+MIN(gap_pdb1,gap_pdb2))))
+            MI = 0 - MI
+        except:
+            SI = 0
+            MI = 0
+            SAS = 0
         if(FSCOR_list[family1].get_family()==FSCOR_list[family2].get_family()):
             dSAS_list.append('p,p,'+str(SAS))
             dSI_list.append('p,p,'+str(SI))
@@ -374,12 +376,14 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path):
             dMI_list.append('n,p,'+str(MI))
         pdb_name = FSCOR_list[family1].get_pdb()+'_to_'+FSCOR_list[family2].get_pdb()
         pdb_name2 = FSCOR_list[family2].get_pdb()+'_to_'+FSCOR_list[family1].get_pdb()
+        d_list.append(pdb_name+' pdb_min = '+str(pdb_min)+' align= '+str(align)+' gpa1='+str(gap_pdb1)+' gap2='+str(gap_pdb2)) 
         result = search_family(pdb_name,pdb_name2)
         d2SAS_list.append(result+str(SAS))
         d2SI_list.append(result+str(SI))
         d2MI_list.append(result+str(MI))
     ###WRITE_FILE('center46_FSCOR_0_log',dlist)
     ###WRITE_FILE('center46_FSCOR_2_log',d2list)
+    WRITE_FILE('FSCOR_log',d_list)
     WRITE_FILE('center46_FSCOR_0_SAS',dSAS_list)
     WRITE_FILE('center46_FSCOR_0_SI',dSI_list)
     WRITE_FILE('center46_FSCOR_0_MI',dMI_list)
@@ -389,12 +393,16 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path):
 #######################################################################
 def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
     count = 0
+    d_list = []
     SAS_list= []
     MI_list = []
     SI_list = []
     SAS2_list= []
     MI2_list = []
     SI2_list = []
+### test
+    SAS_test_list = []
+    SI_test_list = []
     for T_count in range(0,227):
         pdb_min = 999999
         family1 = 0
@@ -402,6 +410,11 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
         gap_pdb1 = 0
         gap_pdb2 = 0
         align = 0
+        SAS = 0
+        SI = 0
+        MI = 0
+        SAS2 = 0
+        SI2 = 0
         for R_count in range(227,419):
             count+=1
             #   檔案名稱
@@ -430,10 +443,10 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                             context_list.append(each_line)
                     seq1 = context_list[2]
                     seq2 = context_list[5]
-                    for index in range(len(seq1)-1):
-                        if(seq1[index]=='-'):
+                    for index in range(len(seq1)-2):
+                        if(seq1[index]!='-'):
                             temp_gap_seq1+=1
-                        if(seq2[index]=='-'):
+                        if(seq2[index]!='-'):
                             temp_gap_seq2+=1
                         if(seq1[index]!='-' and seq2[index]!='-'):
                             temp_length+=1
@@ -459,10 +472,10 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                             context_list.append(each_line)
                     seq1 = context_list[2]
                     seq2 = context_list[5]
-                    for index in range(len(seq1)-1):
-                        if(seq1[index]=='-'):
+                    for index in range(len(seq1)-2):
+                        if(seq1[index]!='-'):
                             temp_gap_seq1+=1
-                        if(seq2[index]=='-'):
+                        if(seq2[index]!='-'):
                             temp_gap_seq2+=1
                         if(seq1[index]!='-' and seq2[index]!='-'):
                             temp_length+=1
@@ -472,18 +485,16 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                                 temp_RMSD = float(each_line.replace('RMS:',''))
                     pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                     compare_list.append(pdb) 
-            for index in range(len(compare_list)):
-                if(index == 0):
+            min = compare_list[0].getRMSD()
+            gap_num_seq1 = compare_list[0].get_gap1()
+            gap_num_seq2 = compare_list[0].get_gap2()
+            align_length = compare_list[0].get_align()
+            for index in range(1,len(compare_list)):
+                if(min > compare_list[index].getRMSD()):
                     min = compare_list[index].getRMSD()
                     gap_num_seq1 = compare_list[index].get_gap1()
                     gap_num_seq2 = compare_list[index].get_gap2()
                     align_length = compare_list[index].get_align()
-                else:
-                    if(min > compare_list[index].getRMSD()):
-                        min = compare_list[index].getRMSD()
-                        gap_num_seq1 = compare_list[index].get_gap1()
-                        gap_num_seq2 = compare_list[index].get_gap2()
-                        align_length = compare_list[index].get_align()
                         
             if(pdb_min > min):
                 pdb_min  =min
@@ -493,21 +504,31 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                 gap_pdb2 = gap_num_seq2
                 align = align_length
         try:
-            SAS = pdb_min * 100 / align
+            SAS = (pdb_min * 100) / align
+            SAS2 = pdb_min * 100 / align
             SAS = 0 - SAS
-            SI = min * MIN(gap_pdb1,gap_pdb2)/ align
+            SAS2 = 0 - SAS2
+            SI = (pdb_min * MIN(gap_pdb1,gap_pdb2))/ align
+            SI2 = pdb_min * MIN(gap_pdb1,gap_pdb2)/ align
             SI = 0 - SI
-            MI = 1 - ((1+align)/(1+pdb_min/1.5)*(1+MIN(gap_pdb1,gap_pdb2)))
+            SI2 = 0 - SI2
+            MI = 1 - ((1+align)/((1+pdb_min/1.5)*(1+MIN(gap_pdb1,gap_pdb2))))
             MI = 0 - MI
         except:
             SAS = 0
+            SAS2 = 0
+            SI2 = 0
             SI = 0
             MI = 0
         pdb_name = TtoR_list[family1].get_pdb()+'_to_'+TtoR_list[family2].get_pdb()
         pdb_name2 = TtoR_list[family2].get_pdb()+'_to_'+TtoR_list[family1].get_pdb()
-        print pdb_name
-        print "pdb_min = "+str(pdb_min)+' align='+str(align)+' gap1 = '+str(gap_pdb1)+' gap2='+str(gap_pdb2)
+        d_list.append(pdb_name+' pdb_min = '+str(pdb_min)+' align= '+str(align)+' gpa1='+str(gap_pdb1)+' gap2='+str(gap_pdb2)) 
+        print pdb_name+" pdb_min = "+str(pdb_min)+' align='+str(align)+' gap1 = '+str(gap_pdb1)+' gap2='+str(gap_pdb2)
         result = search_family(pdb_name,pdb_name2)
+        ### test
+        SAS_test_list.append(result+str(SAS2))
+        SI_test_list.append(result+str(SI2))
+        ###
         SAS2_list.append(result+str(SAS))
         SI2_list.append(result+str(SI))
         MI2_list.append(result+str(MI))
@@ -519,6 +540,9 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
             SAS_list.append('n,p,'+str(SAS))
             SI_list.append('n,p,'+str(SI))
             MI_list.append('n,p,'+str(MI))
+    WRITE_FILE('TtoR_log2',d_list)
+    WRITE_FILE(outfile+'_2_test_SAS',SAS_test_list)
+    WRITE_FILE(outfile+'_2_test_SI',SI_test_list)
     WRITE_FILE(outfile+'_0_SAS',SAS_list)
     WRITE_FILE(outfile+'_0_SI',SI_list)
     WRITE_FILE(outfile+'_0_MI',MI_list)
@@ -568,13 +592,13 @@ if __name__ =='__main__':
     TtoR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_TtoR-FSCOR.sa")
     ###TEST(TtoR_list)
      
-    FSCOR_document_path ='./iPartS2_tool/alignment/iPARTS_BLOSUM-like_SM-O6E1-SARA_FSCOR.sa-semiG.job/'
-    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','69C_TtoR','23C_TtoR']
+    FSCOR_document_path ="/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/"
+    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR']
     TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/"]
-    TtoR_document_path = TtoR_file[4]
+    TtoR_document_path = TtoR_file[2]
     pdbpath = '../pdb/'
     oneDseq_path = '../1Dseq/'
-    TtoR_Process(TtoR_list,TtoR_document_path,TtoR_output_file[4])
-    #FSCOR_Process(TtoR_list,TtoR_document_path)
+    TtoR_Process(TtoR_list,TtoR_document_path,TtoR_output_file[2])
+    #FSCOR_Process(FSCOR_list,FSCOR_document_path)
     #Raw_TtoR_Process(TtoR_list,TtoR_document_path)
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path)
