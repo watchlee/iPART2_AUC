@@ -242,7 +242,7 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path):
     ###print count 
     return 
 #######################################################################
-def FSCOR_Process(FSCOR_list,FSCOR_document_path):
+def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     #count = 0
     d_list = []
     dSAS_list=[]
@@ -297,15 +297,12 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path):
                                 temp_gap_seq2+=1
                             if(seq1[i]!='-' and seq2[i]!='-'):
                                 temp_length+=1
-                        temp_gap_seq1 = len(seq1)-2 - temp_gap_seq1
-                        temp_gap_seq2 = len(seq2)-2 - temp_gap_seq2
                         ###print file_document_name+' length='+str(temp_length)+' gap1='+str(temp_gap_seq1)+' gap2='+str(temp_gap_seq2)
                         pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                         compare_list.append(pdb)
 
                 except:
                     with open(FSCOR_document_path+file_document_name2+'/semiG_result.php','r') as file:
-                        print file_document_name2
                         for each_line in file:
                             context_list.append(each_line)
                             context_length+=1
@@ -332,8 +329,6 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path):
                                 temp_gap_seq2+=1
                             if(seq1[i]!='-' and seq2[i]!='-'):
                                 temp_length+=1
-                        temp_gap_seq1 = len(seq1)-2 - temp_gap_seq1
-                        temp_gap_seq2 = len(seq2)-2 - temp_gap_seq2
                         ###print file_document_name2+' length = '+str(temp_length)+' gap1= '+str(temp_gap_seq1)+' gap2 ='+str(temp_gap_seq2)
                         pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                         compare_list.append(pdb)
@@ -354,13 +349,12 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path):
                     align = align_length
                     family1 = index
                     family2 = inner_index
-        print str(family1)+' '+str(family2)
         try:
             SAS = pdb_min * 100 / align
             SAS = 0 - SAS
             SI = (pdb_min * MIN(gap_pdb1,gap_pdb2))/ align
             SI = 0 - SI
-            MI = 1 - ((1+align)/((1+pdb_min/1.5)*(1+MIN(gap_pdb1,gap_pdb2))))
+            MI = 1 - ((1+align)/((1+(pdb_min/1.5))*(1+MIN(gap_pdb1,gap_pdb2))))
             MI = 0 - MI
         except:
             SI = 0
@@ -383,13 +377,13 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path):
         d2MI_list.append(result+str(MI))
     ###WRITE_FILE('center46_FSCOR_0_log',dlist)
     ###WRITE_FILE('center46_FSCOR_2_log',d2list)
-    WRITE_FILE('FSCOR_log',d_list)
-    WRITE_FILE('center46_FSCOR_0_SAS',dSAS_list)
-    WRITE_FILE('center46_FSCOR_0_SI',dSI_list)
-    WRITE_FILE('center46_FSCOR_0_MI',dMI_list)
-    WRITE_FILE('center46_FSCOR_2_SI',d2SI_list)
-    WRITE_FILE('center46_FSCOR_2_MI',d2MI_list)
-    WRITE_FILE('center46_FSCOR_2_SAS',d2SAS_list)
+    WRITE_FILE(outfile+'_log',d_list)
+    WRITE_FILE(outfile+'_0_SAS',dSAS_list)
+    WRITE_FILE(outfile+'_0_SI',dSI_list)
+    WRITE_FILE(outfile+'_0_MI',dMI_list)
+    WRITE_FILE(outfile+'_2_SI',d2SI_list)
+    WRITE_FILE(outfile+'_2_MI',d2MI_list)
+    WRITE_FILE(outfile+'_2_SAS',d2SAS_list)
 #######################################################################
 def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
     count = 0
@@ -540,7 +534,7 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
             SAS_list.append('n,p,'+str(SAS))
             SI_list.append('n,p,'+str(SI))
             MI_list.append('n,p,'+str(MI))
-    WRITE_FILE('TtoR_log2',d_list)
+    WRITE_FILE(outfile+'_log',d_list)
     WRITE_FILE(outfile+'_2_test_SAS',SAS_test_list)
     WRITE_FILE(outfile+'_2_test_SI',SI_test_list)
     WRITE_FILE(outfile+'_0_SAS',SAS_list)
@@ -592,13 +586,22 @@ if __name__ =='__main__':
     TtoR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_TtoR-FSCOR.sa")
     ###TEST(TtoR_list)
      
-    FSCOR_document_path ="/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/"
+    FSCOR_file = ['/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/']
+    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR']
     TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR']
     TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/"]
-    TtoR_document_path = TtoR_file[2]
+
+    F_index = 2
+    T_index = 2
+    TtoR_document_path = TtoR_file[T_index]
+    FSCOR_document_path = FSCOR_file[F_index]
+
     pdbpath = '../pdb/'
     oneDseq_path = '../1Dseq/'
-    TtoR_Process(TtoR_list,TtoR_document_path,TtoR_output_file[2])
-    #FSCOR_Process(FSCOR_list,FSCOR_document_path)
+    #TtoR_Process(TtoR_list,TtoR_document_path,TtoR_output_file[T_index])
+    #FSCOR_Process(FSCOR_list,FSCOR_document_path,FSCOR_output_file[F_index])
     #Raw_TtoR_Process(TtoR_list,TtoR_document_path)
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path)
+    for index in range(len(FSCOR_output_file)):
+        #FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+        TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
