@@ -290,7 +290,7 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                                 context_list.append(each_line)
                         seq1 = context_list[2]
                         seq2 = context_list[5]
-                        for i in range(0,len(seq1)-1):
+                        for i in range(0,len(seq1)-2):
                             if(seq1[i]!='-'):
                                 temp_gap_seq1+=1
                             if(seq2[i]!='-'):
@@ -586,22 +586,22 @@ if __name__ =='__main__':
     TtoR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_TtoR-FSCOR.sa")
     ###TEST(TtoR_list)
      
-    FSCOR_file = ['/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/']
-    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR']
-    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR']
-    TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/"]
+    FSCOR_file = ['/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/','/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-SARA_FSCOR.sa-semiG.job/']
+    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR']
+    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR']
+    TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/",'/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-SARA_FSCOR.sa-semiG.job/']
 
-    F_index = 2
-    T_index = 2
+    F_index = 5
+    T_index = 5
     TtoR_document_path = TtoR_file[T_index]
     FSCOR_document_path = FSCOR_file[F_index]
 
     pdbpath = '../pdb/'
     oneDseq_path = '../1Dseq/'
-    #TtoR_Process(TtoR_list,TtoR_document_path,TtoR_output_file[T_index])
-    #FSCOR_Process(FSCOR_list,FSCOR_document_path,FSCOR_output_file[F_index])
+    #TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
+    #FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
     #Raw_TtoR_Process(TtoR_list,TtoR_document_path)
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path)
     for index in range(len(FSCOR_output_file)):
-        #FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
-        TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
+        FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+        #TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
