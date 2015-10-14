@@ -116,7 +116,7 @@ def read_file(SARA_TEST_DATA_PATH):
             f_list.append(pdb)
     return f_list
 #######################################################################
-def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path):
+def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     ###count = 0
     sort_list = []
     big_log=[] 
@@ -138,7 +138,7 @@ def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path):
                             context_list.append(each_line)
                             context_length+=1
                     times = context_length/ 7
-                    temp_max = int(context_list[6]) 
+                    temp_max = float(context_list[6]) 
                     for loop in range(1,times):
                         if(temp_max < float(context_list[loop*7+6])):
                             temp_max = float(context_list[loop*7+6])
@@ -149,7 +149,7 @@ def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path):
                             context_list.append(each_line)
                             context_length+=1
                     times = context_length/ 7
-                    temp_max = int(context_list[6]) 
+                    temp_max = float(context_list[6]) 
                     for loop in range(1,times):
                         if(temp_max < float(context_list[loop*7+6])):
                             temp_max = float(context_list[loop*7+6])
@@ -181,15 +181,16 @@ def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path):
             big_log.append('n,p,'+str(pdb_max)+' '+str(j)+'\n')
         '''
     ###WRITE_FILE('big_log',big_log)
-    WRITE_FILE('iPARTS_FSCOR_0_RAW',sort_list)
-    WRITE_FILE('iPARTS_FSCOR_2_RAW',sortbig_list)
+    
+    WRITE_FILE(outfile+'_0_RAW',sort_list)
+    WRITE_FILE(outfile+'_2_RAW',sortbig_list)
             ###print FSCOR_list[index].get_family()+' '+FSCOR_list[inner_index].get_family()
             ###print FSCOR_list[index].get_pdb()+' '+FSCOR_list[inner_index].get_pdb()
             ###count+=1
     return 
 
 #######################################################################
-def Raw_TtoR_Process(TtoR_list,TtoR_document_path):
+def Raw_TtoR_Process(TtoR_list,TtoR_document_path,outfile):
     count= 0
     sort_list = []
     sortbig_list = []
@@ -211,20 +212,21 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path):
                         context_list.append(each_line)
                         context_length+=1
                 times = context_length/7
-                temp_max = int(context_list[6])
+                temp_max = float(context_list[6])
+                print 'test'+file_document_name
                 for loop in range(1,times):
-                    if(temp_max < int(context_list[loop*7+6])):
-                        temp_max = int(context_list[loop*7 + 6])
+                    if(temp_max < float(context_list[loop*7+6])):
+                        temp_max = float(context_list[loop*7 + 6])
             except:
                 with open(TtoR_document_path+file_document_name2+'/semiG_result.php','r') as file:
                     for each_line in file:
                         context_list.append(each_line)
                         context_length+=1
                 times = context_length/7
-                temp_max = int(context_list[6])
+                temp_max = float(context_list[6])
                 for loop in range(1,times):
-                    if(temp_max < int(context_list[loop*7+6])):
-                        temp_max = int(context_list[loop*7+6])
+                    if(temp_max < float(context_list[loop*7+6])):
+                        temp_max = float(context_list[loop*7+6])
             if(pdb_max < temp_max):
                 pdb_max = temp_max
                 family1 = R_count
@@ -237,8 +239,9 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path):
         pdb_name2 = TtoR_list[family2].get_pdb()+'_to_'+TtoR_list[family1].get_pdb()
         result = search_family(pdb_name,pdb_name2)
         sortbig_list.append(result+str(pdb_max))
-    WRITE_FILE('iPartS_TtoR_0_RAW',sort_list)
-    WRITE_FILE('iPartS_TtoR_2_RAW',sortbig_list)
+
+    WRITE_FILE(outfile+'_0_RAW',sort_list)
+    WRITE_FILE(outfile+'_2_RAW',sortbig_list)
     ###print count 
     return 
 #######################################################################
@@ -290,6 +293,7 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                                 context_list.append(each_line)
                         seq1 = context_list[2]
                         seq2 = context_list[5]
+                        print str(len(seq1))+' '+str(len(seq2))
                         for i in range(0,len(seq1)-2):
                             if(seq1[i]!='-'):
                                 temp_gap_seq1+=1
@@ -585,23 +589,29 @@ if __name__ =='__main__':
     ###TEST(FSCOR_list)
     TtoR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_TtoR-FSCOR.sa")
     ###TEST(TtoR_list)
-     
+
+###FSCOR setting input file
     FSCOR_file = ['/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/','/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-SARA_FSCOR.sa-semiG.job/']
     FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR']
+
+###TtoR setting input file 
     TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR']
     TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/",'/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-SARA_FSCOR.sa-semiG.job/']
 
-    F_index = 5
-    T_index = 5
+    F_index = 5 
+    T_index = 0
     TtoR_document_path = TtoR_file[T_index]
     FSCOR_document_path = FSCOR_file[F_index]
 
     pdbpath = '../pdb/'
     oneDseq_path = '../1Dseq/'
-    #TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
-    #FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
-    #Raw_TtoR_Process(TtoR_list,TtoR_document_path)
-    #Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path)
-    for index in range(len(FSCOR_output_file)):
-        FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
-        #TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
+   # TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
+    FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
+   # Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
+  #  Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
+   # for index in range(len(FSCOR_output_file)):
+    #for index in range(0,5):
+    #    FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+    #    TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
+    #    Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
+    #    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
