@@ -113,13 +113,9 @@ def read_file(SARA_TEST_DATA_PATH):
 def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     ###count = 0
     sort_list = []
-    big_log=[] 
     sortbig_list= []
-    for index in range(0,len(FSCOR_list)):
-        pdb_max = 0
-        family1= 0
-        family2 =0 
-        for inner_index in range(0,len(FSCOR_list)):
+    for index in range(len(FSCOR_list)):
+        for inner_index in range(index+1,len(FSCOR_list)):
             if(inner_index!=index):
                 context_list = []
                 context_length = 0
@@ -146,36 +142,17 @@ def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                     for loop in range(1,times):
                         if(temp_max < float(context_list[loop*7+6])):
                             temp_max = float(context_list[loop*7+6])
-                if(pdb_max < temp_max):
-                    pdb_max = temp_max
-                    family1 = index
-                    family2 = inner_index
-        ###print str(family1)+' '+str(family2)+' '+str(pdb_max)    
-        if(FSCOR_list[family1].get_family()==FSCOR_list[family2].get_family()):
-            sort_list.append('p,p,'+str(pdb_max))
-        else:
-            sort_list.append('n,p,'+str(pdb_max))
-        pdb_name= FSCOR_list[family1].get_pdb()+'_to_'+FSCOR_list[family2].get_pdb()
-        pdb_name2= FSCOR_list[family2].get_pdb()+'_to_'+FSCOR_list[family1].get_pdb()
-        result = search_family(pdb_name,pdb_name2)
-        sortbig_list.append(result+str(pdb_max))
-        '''
-        if(FSCOR_list[family2].get_bigfamily()==FSCOR_list[family1].get_bigfamily()):
-            i+=1
-            sortbig_list.append('p,p,'+str(pdb_max))
-            big_log.append(FSCOR_list[family1].get_pdb()+' '+FSCOR_list[family2].get_pdb())
-            big_log.append(FSCOR_list[family1].get_bigfamily()+'\n'+FSCOR_list[family2].get_bigfamily())
-            big_log.append('p,p,'+str(pdb_max)+' '+str(i)+'\n')
-        else:
-            j+=1
-            sortbig_list.append('n,p,'+str(pdb_max))
-            big_log.append(FSCOR_list[family1].get_pdb()+' '+FSCOR_list[family2].get_pdb())
-            big_log.append(FSCOR_list[family1].get_bigfamily()+'\n'+FSCOR_list[family2].get_bigfamily())
-            big_log.append('n,p,'+str(pdb_max)+' '+str(j)+'\n')
-        '''
+                if(FSCOR_list[index].get_family()==FSCOR_list[inner_index].get_family()):
+                    sort_list.append('p,p,'+str(temp_max))
+                else:
+                    sort_list.append('n,p,'+str(temp_max))
+                pdb_name = FSCOR_list[index].get_pdb()+'_to_'+FSCOR_list[inner_index].get_pdb()
+                pdb_name2=FSCOR_list[inner_index].get_pdb()+'_to_'+FSCOR_list[index].get_pdb()
+                result = search_family(pdb_name,pdb_name2)
+                sortbig_list.append(result+str(temp_max))
     ###WRITE_FILE('big_log',big_log)
-    WRITE_FILE(outfile+'_0_RAW',sort_list)
-    WRITE_FILE(outfile+'_2_RAW',sortbig_list)
+    WRITE_FILE(outfile+'_0_RAW_another',sort_list)
+    WRITE_FILE(outfile+'_2_RAW_another',sortbig_list)
             ###print FSCOR_list[index].get_family()+' '+FSCOR_list[inner_index].get_family()
             ###print FSCOR_list[index].get_pdb()+' '+FSCOR_list[inner_index].get_pdb()
             ###count+=1
@@ -186,9 +163,6 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path,outfile):
     sort_list = []
     sortbig_list = []
     for T_count in range(0,227):
-        pdb_max = 0
-        family1 = 0
-        family2 = 0
         for R_count in range(227,419):
             count+=1
             #   檔案名稱
@@ -218,20 +192,16 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                 for loop in range(1,times):
                     if(temp_max < float(context_list[loop*7+6])):
                         temp_max = float(context_list[loop*7+6])
-            if(pdb_max < temp_max):
-                pdb_max = temp_max
-                family1 = R_count
-                family2 = T_count
-        if(TtoR_list[family1].get_family()==TtoR_list[family2].get_family()):
-            sort_list.append('p,p,'+str(pdb_max))
-        else:
-            sort_list.append('n,p,'+str(pdb_max))
-        pdb_name = TtoR_list[family1].get_pdb()+'_to_'+TtoR_list[family2].get_pdb()
-        pdb_name2 = TtoR_list[family2].get_pdb()+'_to_'+TtoR_list[family1].get_pdb()
-        result = search_family(pdb_name,pdb_name2)
-        sortbig_list.append(result+str(pdb_max))
-    WRITE_FILE(outfile+'_0_RAW',sort_list)
-    WRITE_FILE(outfile+'_2_RAW',sortbig_list)
+            if(TtoR_list[T_count].get_family()==TtoR_list[R_count].get_family()):
+                sort_list.append('p,p,'+str(temp_max))
+            else:
+                sort_list.append('n,p,'+str(temp_max))
+            pdb_name = TtoR_list[T_count].get_pdb()+'_to_'+TtoR_list[R_count].get_pdb()
+            pdb_name2 = TtoR_list[R_count].get_pdb()+'_to_'+TtoR_list[T_count].get_pdb()
+            result = search_family(pdb_name,pdb_name2)
+            sortbig_list.append(result+str(temp_max))
+    WRITE_FILE(outfile+'_0_RAW_another',sort_list)
+    WRITE_FILE(outfile+'_2_RAW_another',sortbig_list)
     ###print count 
     return 
 #######################################################################
@@ -535,24 +505,46 @@ if __name__ =='__main__':
     TtoR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_TtoR-FSCOR.sa")
     ###TEST(TtoR_list)
 ###FSCOR setting input file
-    FSCOR_file = ['/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/','/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/','/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-new_encoded_iPARTS-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/5dims_c46_K10_matrix-O8E0.5-46C_K10-semiG.job/']
-    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR']
+    FSCOR_file = ['/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/'
+                  ,'/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/'
+                  ,'/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-new_encoded_iPARTS-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/5dims_c46_K10_matrix-O8E0.5-46C_K10-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-SARA_FSCOR.sa-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/5dims_c46_K30_matrix-O9E1-46c_30k-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/5dims_c46_K60_matrix-O7E2-iPARTS_5D_46C_K60_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/5dims_c46_K90_matrix-O6E2.5-iPARTS_5D_46C_K90_SARA_FSCOR-semiG.job/']
+    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR']
 ###TtoR setting input file 
-    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR']
-    TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/","/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/","/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/",'/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-new_encoded_iPARTS-semiG.job/','/home/watchlee/Research_Programming/RMSD/alignment_main/5dims_c46_K10_matrix-O8E0.5-46C_K10-semiG.job/']
-    F_index = 6 
-    T_index = 6
+
+    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR']
+    TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/"
+                 ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/"
+                 ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/"
+                 ,"/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/"
+                 ,"/home/bingts/iPARTS2_training/alignment_main/matrix.txt-O12E1-SARA_FSCOR_over1k_69c-semiG.job/"
+                 ,'/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/iPARTS_BLOSUM-like_SM-O6E1-new_encoded_iPARTS-semiG.job/'
+                 ,'/home/watchlee/Research_Programming/RMSD/alignment_main/5dims_c46_K10_matrix-O8E0.5-46C_K10-semiG.job/'
+                 ,'/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/5dims_c46_K30_matrix-O9E1-46c_30k-semiG.job/'
+                 ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPART2_23c_matrix.txt-O5E0.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                 ,'/home/watchlee/Research_Programming/RMSD/alignment_main/5dims_c46_K60_matrix-O7E2-iPARTS_5D_46C_K60_SARA_FSCOR-semiG.job/'
+                 ,'/home/watchlee/Research_Programming/RMSD/alignment_main/5dims_c46_K90_matrix-O6E2.5-iPARTS_5D_46C_K90_SARA_FSCOR-semiG.job/']
+
+    F_index =10 
+    T_index =10  
     TtoR_document_path = TtoR_file[T_index]
     FSCOR_document_path = FSCOR_file[F_index]
     pdbpath = '../pdb/'
     oneDseq_path = '../1Dseq/'
-    #TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
-   # FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
-   # Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
-  #  Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
+    TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
+    FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
+    Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
+    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
    # for index in range(len(FSCOR_output_file)):
-    for index in range(0,6):
-        FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
-        TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
+    #for index in range(0,6):
+    #    FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+    #    TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
     #    Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
     #    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
