@@ -69,7 +69,7 @@ if __name__=='__main__':
     try:
         list = []
         value=['_0','_2']
-        type = ['_SAS','_SAS_another','_SI','_SI_another','_MI','_MI_another']
+        type = ['_SAS','_SAS_another','_SI','_SI_another','_MI','_MI_another','_RAW','_RAW_another']
         for count in value:
             for count2 in type:
                 list.append(str(sys.argv[1])+count+count2)
@@ -90,7 +90,10 @@ if __name__=='__main__':
         try : 
             with open(str(sys.argv[2]),'w') as file:
                 for line in list:
-                    file.write(line.replace('\n','')+'\n')
+                    if(line.find('AUC')!=-1):
+                        file.write(line.replace('\n','')+'\n\n')
+                    else:
+                        file.write(line.replace('\n','')+'\n')
         except:
             pass
         subprocess.call('rm temp_AUC',shell=True) 
