@@ -259,6 +259,14 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     sas_score_log = []
     si_score_log = []
     mi_score_log = []
+    #---------new  added   2015/11/24  -------debug-----#
+    family_compare_log=[]
+    family_compare_log2=[]
+    family_compare_log3=[]
+    compare_number = 0
+    compare_number2= 0
+    compare_number3= 0
+
     for index in range(len(FSCOR_list)):
         sas_min = 999999
         sas_pdb1 = 0
@@ -450,6 +458,31 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
         else:
             mi_log+='d=0 n,p'
             dMI_list.append('n,p,'+str(mi_min))
+        temp_family = FSCOR_list[sas_family1].get_family()+'|'+FSCOR_list[sas_family2].get_family()
+        temp_family2 = FSCOR_list[si_family1].get_family()+'|'+FSCOR_list[si_family2].get_family()
+        temp_family3 = FSCOR_list[mi_family1].get_family()+'|'+FSCOR_list[mi_family2].get_family()
+        temp_pdb = FSCOR_list[sas_family1].get_pdb()+'_'+FSCOR_list[sas_family2].get_pdb()
+        temp_pdb2 = FSCOR_list[si_family1].get_pdb()+'_'+FSCOR_list[si_family2].get_pdb()
+        temp_pdb3 = FSCOR_list[mi_family1].get_pdb()+'_'+FSCOR_list[mi_family2].get_pdb()
+        if(temp_family!=temp_family2):
+            family_compare_log.append(temp_pdb+'\n'+temp_pdb2)
+            family_compare_log.append(temp_family+'\n'+temp_family2)
+            family_compare_log.append('SAS is '+str(sas_min)+' seq_length='+str(sas_pdb1)+' seq2_length='+str(sas_pdb2)+' total align='+str(sas_align))
+            family_compare_log.append('SI is '+str(si_min)+' seq_length='+str(si_pdb1)+' seq2_length='+str(si_pdb2)+' total align='+str(si_align)+'\n')
+            compare_number+=1
+        if(temp_family!=temp_family3):
+            family_compare_log2.append(temp_pdb+'\n'+temp_pdb3)
+            family_compare_log2.append(temp_family+'\n'+temp_family3)
+            family_compare_log2.append('SAS is '+str(sas_min)+' seq_length='+str(sas_pdb1)+' seq2_length='+str(sas_pdb2)+' total align='+str(sas_align))
+            family_compare_log2.append('MI is '+str(mi_min)+' seq_length='+str(mi_pdb1)+' seq2_length='+str(mi_pdb2)+' total align='+str(mi_align)+'\n')
+            compare_number2+=1
+        if(temp_family2!=temp_family3):
+            family_compare_log3.append(temp_pdb2+'\n'+temp_pdb3)
+            family_compare_log3.append(temp_family2+'\n'+temp_family3)
+            family_compare_log3.append('SI is '+str(si_min)+' seq_length='+str(si_pdb1)+' seq2_length='+str(si_pdb2)+' total align='+str(si_align))
+            family_compare_log3.append('MI is '+str(mi_min)+' seq_length='+str(mi_pdb1)+' seq2_length='+str(mi_pdb2)+' total align='+str(mi_align)+'\n')
+            compare_number3+=1
+
         sas_test_list.append(sas_log)
         mi_test_list.append(mi_log)
         si_test_list.append(si_log)
@@ -458,6 +491,12 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
         d2MI_list.append(mi_result+str(mi_min))
     ###WRITE_FILE('center46_FSCOR_0_log',dlist)
     ###WRITE_FILE('center46_FSCOR_2_log',d2list)
+    family_compare_log.append('count:'+str(compare_number))
+    family_compare_log2.append('count:'+str(compare_number2))
+    family_compare_log3.append('count:'+str(compare_number3))
+    WRITE_FILE(outfile+'_SAScompareSI',family_compare_log)
+    WRITE_FILE(outfile+'_SAScompareMI',family_compare_log)
+    WRITE_FILE(outfile+'_SIcompareMI',family_compare_log)
     WRITE_FILE(outfile+'_sasvalue',sas_score_log)
     WRITE_FILE(outfile+'_sivalue',si_score_log)
     WRITE_FILE(outfile+'_mivalue',mi_score_log)
@@ -744,12 +783,16 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter02_matrix-O8E1.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter03_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter04_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter05_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter05_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter02_matrix-O13E4-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter06_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter06_matrix-O13E3.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter07_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
 
-    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR']
+    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR']
 
 ###TtoR setting input file 
-    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR','iter02_23C_TtoR','iter03_23C_TtoR','iter04_23C_TtoR','iter05_23C_TtoR']
+    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR','iter02_23C_TtoR','iter03_23C_TtoR','iter04_23C_TtoR','iter05_23C_TtoR','iter02_MI_TtoR','iter07_23_TtoR']
     TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/"
                  ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/"
                  ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/"
@@ -764,9 +807,12 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter02_matrix-O8E1.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter03_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter04_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter05_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter05_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter02_matrix-O13E4-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter07_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
 
-    F_index = 14
+    #F_index = 18
+    F_index = 0 
     T_index =11
     TtoR_document_path = TtoR_file[T_index]
     FSCOR_document_path = FSCOR_file[F_index]
@@ -774,12 +820,12 @@ if __name__ =='__main__':
     pdbpath = '../pdb/'
     oneDseq_path = '../1Dseq/'
     #TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
-    FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
+    #FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
     #Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
-    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
+    #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
    # for index in range(len(FSCOR_output_file)):
-    #for index in range(0,11):
-    #    FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+    for index in range(0,1):
+        FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
      #   TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
      #   Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
      #   Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
