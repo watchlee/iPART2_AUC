@@ -524,11 +524,28 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter02_matrix-O13E4-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter06_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter06_matrix-O13E3.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter07_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter07_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter08_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter09_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter09_matrix-O14E2-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter10_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter10_matrix-O15E2-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter11_matrix-O1E1.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter11_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter11_matrix-O1E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter09_matrix-O1E1.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter09_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter09_matrix-O1E1.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter10_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter11_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
 
-    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR']
+    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR','iter08_23_FSCOR','iter09_23_FSCOR','iter09_23_MI_FSCOR','iter10_23_FSCOR','iter10_23_MI_FSCOR','iter11_SARA_FSCOR','iter11_23_FSCOR','iter11_SARA2_FSCOR','iter09_SARA_FSCOR','iter12_23_FSCOR','iter09_true_FSCOR','iter09_true_SARA_FSCOR','iter10_true_FSCOR','iter11_true_FSCOR','iter12_true_FSCOR','iter13_23_FSCOR','iter14_23_FSCOR']
 ###TtoR setting input file 
-    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR','iter02_23C_TtoR','iter03_23C_TtoR','iter04_23C_TtoR','iter05_23C_TtoR','iter02_MI_TtoR','iter07_23_TtoR']
+    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR','iter02_23C_TtoR','iter03_23C_TtoR','iter04_23C_TtoR','iter05_23C_TtoR','iter02_MI_TtoR','iter07_23_TtoR','iter08_23_TtoR','iter09_23_TtoR','iter09_23_MI_TtoR','iter10_23_TtoR','iter10_23_MI_TtoR','iter11_SARA_TtoR','iter11_23_TtoR','iter11_SARA2_TtoR','iter09_SARA_TtoR','iter12_23_TtoR','iter09_true_TtoR','iter09_true_SARA_TtoR','iter10_true_TtoR','iter11_true_TtoR','iter12_true_TtoR','iter13_23_TtoR','iter14_23_TtoR']
     TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/"
                  ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/"
                  ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/"
@@ -545,21 +562,38 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter04_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter05_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter02_matrix-O13E4-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter07_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter07_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter08_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter09_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter09_matrix-O14E2-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter10_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter10_matrix-O15E2-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter11_matrix-O1E1.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter11_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter11_matrix-O1E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter09_matrix-O1E1.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter09_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter09_matrix-O1E1.5-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter10_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter11_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
 
-    F_index =18
-    T_index =10  
+    F_index =31
+    T_index =17  
     TtoR_document_path = TtoR_file[T_index]
     FSCOR_document_path = FSCOR_file[F_index]
     pdbpath = '../pdb/'
     oneDseq_path = '../1Dseq/'
     #TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
-    FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
+    #FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
     #Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
-    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
+    #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
    # for index in range(len(FSCOR_output_file)):
-    #for index in range(0,6):
-    #    FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+    for index in range(34,36):
+        FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
     #    TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
     #    Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
-    #    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+        Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
