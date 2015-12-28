@@ -203,7 +203,10 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path,outfile):
     WRITE_FILE(outfile+'_0_RAW_another',sort_list)
     WRITE_FILE(outfile+'_2_RAW_another',sortbig_list)
     ###print count 
-    return 
+    return
+#######################################################################
+
+
 #######################################################################
 def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     #count = 0
@@ -499,6 +502,104 @@ def WRITE_FILE(outname,list):
         for index in range(len(list)):
             file.write(list[index]+'\n')
 #######################################################################
+def lost_FSCOR_Process(FSCOR_document_path,outfile):
+    #count = 0
+    d_list = []
+    dSAS_list=[]
+    dSI_list = []
+    dMI_list = []
+    d2SAS_list = []
+    d2MI_list = []
+    d2SI_list = []
+
+    lost_FSCOR_AUC_list = []
+    with open('./lost_family_FSCOR','r') as file: 
+        for line in file:
+            lost_FSCOR_AUC_list.append(line)
+    for line in lost_FSCOR_AUC_list:
+        #the result of compare family
+        compare_result= line.split(' ')[1].replace('\n','')
+        compare_pdb_name = line.split(' ')[0].replace('\n','')
+        context_length = 0
+        min = 0
+        align_length = 0
+        gap_num_seq1 = 0
+        gap_num_seq2 = 0
+        compare_list=[]
+        seq1=''
+        seq2=''
+        with open(FSCOR_document_path+compare_pdb_name+'/semiG_result.php','r') as file:
+            for each_line in file:
+                context_length+=1
+            times = context_length / 7
+            for loop in range(times):
+                temp_RMSD = 0
+                temp_gap_seq1 = 0
+                temp_gap_seq2 = 0
+                temp_length = 0
+                with open(FSCOR_document_path+compare_pdb_name+'/profit_log'+str(loop),'r') as file:
+                    for each_line in file:
+                        if(each_line.find('RMS')!=-1):
+                            temp_RMSD = float(each_line.replace('RMS:',''))
+                context_list = []
+                with open(FSCOR_document_path+compare_pdb_name+'/ori_ali_seq.pir'+str(loop),'r') as file:
+                    for each_line in file:
+                        context_list.append(each_line)
+                seq1 = context_list[2]
+                seq2 = context_list[5]
+                for i in range(0,len(seq1)-2):
+                    if(seq1[i]!='-'):
+                        temp_gap_seq1+=1
+                    if(seq2[i]!='-'):
+                        temp_gap_seq2+=1
+                    if(seq1[i]!='-' and seq2[i]!='-'):
+                        temp_length+=1
+                ###print file_document_name+' length='+str(temp_length)+' gap1='+str(temp_gap_seq1)+' gap2='+str(temp_gap_seq2)
+                pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
+                compare_list.append(pdb)
+        if(len(seq1)!=len(seq2)):
+            print compare_pdb_name+' not equal'+str(len(seq1))+' '+str(len(seq2))
+        else:
+            print compare_pdb_name+' equal'
+        min = compare_list[0].getRMSD()
+        gap_num_seq1 = compare_list[0].get_gap1()
+        gap_num_seq2 = compare_list[0].get_gap2()
+        align_length = compare_list[0].get_align()
+        for i in range(1,len(compare_list)):
+            if(min > compare_list[i].getRMSD()):
+                min = compare_list[i].getRMSD()
+                gap_num_seq1 = compare_list[i].get_gap1()
+                gap_num_seq2 = compare_list[i].get_gap2()
+                align_length = compare_list[i].get_align()
+        try:
+            SAS = min*100 / align_length
+            SAS = 0 - SAS
+            SI = (min * MIN(gap_num_seq1,gap_num_seq2))/align_length
+            SI = 0 - SI
+            MI = 1 - ((1+align_length)/((1+(min/1.5))*(1+MIN(gap_num_seq1,gap_num_seq2))))
+            MI = 0 - MI
+        except:
+            SI = 0
+            MI = 0
+            SAS = 0
+        dSAS_list.append(compare_result+','+str(SAS))
+        dSI_list.append(compare_result+','+str(SI))
+        dMI_list.append(compare_result+','+str(MI))
+        ###d_list.append(pdb_name+' pdb_min = '+str(min)+' align= '+str(align_length)+' gpa1='+str(gap_num_seq1)+' gap2='+str(gap_num_seq2)) 
+        result = search_family(compare_pdb_name,compare_pdb_name)
+        d2SAS_list.append(result+str(SAS))
+        d2SI_list.append(result+str(SI))
+        d2MI_list.append(result+str(MI))
+    ###WRITE_FILE('center46_FSCOR_0_log',dlist)
+    ###WRITE_FILE('center46_FSCOR_2_log',d2list)
+    WRITE_FILE(outfile+'_log_another_lost',d_list)
+    WRITE_FILE(outfile+'_0_SAS_another_lost',dSAS_list)
+    WRITE_FILE(outfile+'_0_SI_another_lost',dSI_list)
+    WRITE_FILE(outfile+'_0_MI_another_lost',dMI_list)
+    WRITE_FILE(outfile+'_2_SI_another_lost',d2SI_list)
+    WRITE_FILE(outfile+'_2_MI_another_lost',d2MI_list)
+    WRITE_FILE(outfile+'_2_SAS_another_lost',d2SAS_list)
+###############################################################
 if __name__ =='__main__':
     FSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_FSCOR.sa")
     ###TEST(FSCOR_list)
@@ -592,8 +693,16 @@ if __name__ =='__main__':
     #Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
    # for index in range(len(FSCOR_output_file)):
-    for index in range(34,36):
+    for index in range(0,6):
         FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
     #    TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
     #    Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
         Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+
+#    lost_FSCOR_Process(FSCOR_file[5],FSCOR_output_file[5])
+'''
+    FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
+    FSCOR_Process(FSCOR_list,FSCOR_file[1],FSCOR_output_file[1])
+    FSCOR_Process(FSCOR_list,FSCOR_file[3],FSCOR_output_file[3])
+    FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
+'''

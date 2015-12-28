@@ -15,6 +15,10 @@ import subprocess
 read_file = open('../processed_eachto418_d2','r')
 bigfamily_compare = read_file.read()
 read_file.close()
+lost_top_information=[]
+with open('./list_Top','r') as file:
+    for line in file:
+        lost_top_information.append(line)
 #######################################################################
 class PDB_DATA:
     big_family = '' # 祖先
@@ -121,6 +125,7 @@ def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     sort_list = []
     big_log=[] 
     sortbig_list= []
+    lost_index = 0
     for index in range(0,len(FSCOR_list)):
         pdb_max = 0
         family1= 0
@@ -142,7 +147,12 @@ def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                     for loop in range(1,times):
                         if(temp_max < float(context_list[loop*7+6])):
                             temp_max = float(context_list[loop*7+6])
-
+                    '''
+                    if(lost_detect_function(file_document_name,file_document_name2,lost_index)):
+                        if(lost_index!=len(lost_top_information)-1):
+                            lost_index+=1
+                            temp_max=9999999
+                    '''
                 except:
                     with open(FSCOR_document_path+file_document_name2+'/semiG_result.php','r') as file:
                         for each_line in file:
@@ -153,6 +163,12 @@ def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                     for loop in range(1,times):
                         if(temp_max < float(context_list[loop*7+6])):
                             temp_max = float(context_list[loop*7+6])
+                    '''
+                    if(lost_detect_function(file_document_name,file_document_name2,lost_index)):
+                        if(lost_index!=len(lost_top_information)-1):
+                            lost_index+=1
+                            temp_max=9999999
+                    '''
                 if(pdb_max < temp_max):
                     pdb_max = temp_max
                     family1 = index
@@ -191,6 +207,7 @@ def Raw_FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
 
 #######################################################################
 def Raw_TtoR_Process(TtoR_list,TtoR_document_path,outfile):
+    lost_index=0
     count= 0
     sort_list = []
     sortbig_list = []
@@ -217,6 +234,12 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                 for loop in range(1,times):
                     if(temp_max < float(context_list[loop*7+6])):
                         temp_max = float(context_list[loop*7 + 6])
+                '''
+                if(lost_detect_function(file_document_name,file_document_name2,lost_index)):
+                    if(lost_index!=len(lost_top_information)-1):
+                        lost_index+=1
+                        temp_max=9999999
+                '''
             except:
                 with open(TtoR_document_path+file_document_name2+'/semiG_result.php','r') as file:
                     for each_line in file:
@@ -227,6 +250,12 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                 for loop in range(1,times):
                     if(temp_max < float(context_list[loop*7+6])):
                         temp_max = float(context_list[loop*7+6])
+                '''
+                if(lost_detect_function(file_document_name,file_document_name2,lost_index)):
+                    if(lost_index!=len(lost_top_information)-1):
+                        lost_index+=1
+                        temp_max=99999999
+                '''
             if(pdb_max < temp_max):
                 pdb_max = temp_max
                 family1 = R_count
@@ -277,7 +306,9 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     si_rmsd = 0
     mi_rmsd = 0
     family_log=[]
-    family_information=[]
+
+    lost_index=0
+    
     #------觀察rmsd 是否與si相似------#
     dRMSD_list = []
     d2RMSD_list=[]
@@ -321,6 +352,7 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                 file_document_name = FSCOR_list[index].get_pdb()+'_to_'+FSCOR_list[inner_index].get_pdb()
 
                 file_document_name2 = FSCOR_list[inner_index].get_pdb()+'_to_'+FSCOR_list[index].get_pdb()
+                ###print file_document_name+' '+file_document_name2
                 context_length = 0
                 min = 0
                 align_length = 0
@@ -328,6 +360,7 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                 gap_num_seq2 = 0
                 compare_list=[]
                 
+
                 try:
                     with open(FSCOR_document_path+file_document_name+'/semiG_result.php','r') as file:
                         for each_line in file:
@@ -348,7 +381,7 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                                 context_list.append(each_line)
                         seq1 = context_list[2]
                         seq2 = context_list[5]
-                        print str(len(seq1))+' '+str(len(seq2))
+                        ###print str(len(seq1))+' '+str(len(seq2))
                         for i in range(0,len(seq1)-2):
                             if(seq1[i]!='-'):
                                 temp_gap_seq1+=1
@@ -357,6 +390,13 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                             if(seq1[i]!='-' and seq2[i]!='-'):
                                 temp_length+=1
                         ###print file_document_name+' length='+str(temp_length)+' gap1='+str(temp_gap_seq1)+' gap2='+str(temp_gap_seq2)
+                        '''
+                        if(lost_detect_function(file_document_name,file_document_name2,lost_index)):
+                            if(lost_index!=len(lost_top_information)-1):
+                                lost_index+=1
+                                print 'finding the lost top information '+lost_top_information[lost_index]
+                                temp_RMSD = 99999999
+                        '''
                         pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                         compare_list.append(pdb)
 
@@ -389,8 +429,16 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                             if(seq1[i]!='-' and seq2[i]!='-'):
                                 temp_length+=1
                         ###print file_document_name2+' length = '+str(temp_length)+' gap1= '+str(temp_gap_seq1)+' gap2 ='+str(temp_gap_seq2)
+                        '''
+                        if(lost_detect_function(file_document_name,file_document_name2,lost_index)):
+                            if(lost_index!=len(lost_top_information)-1):
+                                lost_index+=1
+                                print 'finding the lost top information '+lost_top_information[lost_index]
+                                temp_RMSD = 99999999
+                        '''
                         pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                         compare_list.append(pdb)
+                    
                 min = compare_list[0].getRMSD()
                 gap_num_seq1 = compare_list[0].get_gap1()
                 gap_num_seq2 = compare_list[0].get_gap2()
@@ -604,6 +652,7 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
     sas_score_log = []
     si_score_log = []
     mi_score_log = []
+    lost_index = 0
 
     for T_count in range(0,227):
         sas_min = 999999
@@ -667,6 +716,13 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                         for each_line in file3:
                             if(each_line.find('RMS')!=-1):
                                 temp_RMSD = float(each_line.replace('RMS:',''))
+                    '''
+                    if(lost_detect_function(file_document_name,file_document_name2,lost_index)):
+                        if(lost_index!=len(lost_top_information)-1):
+                            lost_index+=1
+                            print 'finding the lost top information '+lost_top_information[lost_index]
+                            temp_RMSD = 99999999
+                    '''
                     pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                     compare_list.append(pdb) 
             except:
@@ -696,6 +752,13 @@ def TtoR_Process(TtoR_list,TtoR_document_path,outfile):
                         for each_line in file3:
                             if(each_line.find('RMS')!=-1):
                                 temp_RMSD = float(each_line.replace('RMS:',''))
+                    '''
+                    if(lost_detect_function(file_document_name,file_document_name2,lost_index)):
+                        if(lost_index!=len(lost_top_information)-1):
+                            lost_index+=1
+                            print 'finding the lost top information '+lost_top_information[lost_index]
+                            temp_RMSD = 99999999
+                    '''
                     pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                     compare_list.append(pdb) 
             min = compare_list[0].getRMSD()
@@ -847,6 +910,13 @@ def analysis_Compare(compare_pdb,compare_family,target_index,destition_index,tar
 
 
 #######################################################################
+### 遺失檔案偵測
+def lost_detect_function(pdb_name,pdb_name2,lost_index):
+    if(pdb_name==lost_top_information[lost_index].replace('\n','') or pdb_name2==lost_top_information[lost_index].replace('\n','')):
+        return True
+    else:
+        return False 
+#######################################################################
 ### 輸出檔案
 def WRITE_FILE(outname,list):
     with open(outname,'w') as file:
@@ -860,7 +930,7 @@ if __name__ =='__main__':
     ###TEST(TtoR_list)
 
 ###FSCOR setting input file
-    FSCOR_file = ['/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/'
+    FSCOR_file = ('/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/'
                   ,'/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/'
@@ -895,13 +965,13 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter11_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/')
 
-    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR','iter08_23_FSCOR','iter09_23_FSCOR','iter09_23_MI_FSCOR','iter10_23_FSCOR','iter10_23_MI_FSCOR','iter11_SARA_FSCOR','iter11_23_FSCOR','iter11_SARA2_FSCOR','iter09_SARA_FSCOR','iter12_23_FSCOR','iter09_true_FSCOR','iter09_true_SARA_FSCOR','iter10_true_FSCOR','iter11_true_FSCOR','iter12_true_FSCOR','iter13_23_FSCOR','iter14_23_FSCOR']
+    FSCOR_output_file = ('23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR','iter08_23_FSCOR','iter09_23_FSCOR','iter09_23_MI_FSCOR','iter10_23_FSCOR','iter10_23_MI_FSCOR','iter11_SARA_FSCOR','iter11_23_FSCOR','iter11_SARA2_FSCOR','iter09_SARA_FSCOR','iter12_23_FSCOR','iter09_true_FSCOR','iter09_true_SARA_FSCOR','iter10_true_FSCOR','iter11_true_FSCOR','iter12_true_FSCOR','iter13_23_FSCOR','iter14_23_FSCOR')
 
 ###TtoR setting input file 
     TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR','iter02_23C_TtoR','iter03_23C_TtoR','iter04_23C_TtoR','iter05_23C_TtoR','iter02_MI_TtoR','iter07_23_TtoR','iter08_23_TtoR','iter09_23_TtoR','iter09_23_MI_TtoR','iter10_23_TtoR','iter10_23_MI_TtoR','iter11_SARA_TtoR','iter11_23_TtoR','iter11_SARA2_TtoR','iter09_SARA_TtoR','iter12_23_TtoR','iter09_true_TtoR','iter09_true_SARA_TtoR','iter10_true_TtoR','iter11_true_TtoR','iter12_true_TtoR','iter13_23_TtoR','iter14_23_TtoR']
-    TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/"
+    TtoR_file = ("/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/"
                  ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/"
                  ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/"
                  ,"/home/bingts/iPARTS2_training/alignment_main/final_matrix.txt-O5E0.5-SARA_FSCOR_over1k_23c-semiG.job/"
@@ -934,23 +1004,24 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter11_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/')
 
     #F_index = 18
-    F_index =31
-    T_index =18
+    #F_index =31
+    F_index=3
+    T_index =3
     TtoR_document_path = TtoR_file[T_index]
     FSCOR_document_path = FSCOR_file[F_index]
 
     pdbpath = '../pdb/'
     oneDseq_path = '../1Dseq/'
-    #TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
+    TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
     #FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
-    #Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
+    Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
-    for index in range(35,36):
+    #for index in range(0,5):
     #for index in range(len(TtoR_file)):
-         FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+    #    FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
     #    TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
     #    Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
-         Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+    #    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])

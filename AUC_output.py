@@ -4,17 +4,10 @@ import sys
 import subprocess
 
 def calculate_AUC():
-    list = ['./23C'
+    list =['./23C'
             ,'./23C_4L'
-            ,'./46C'
-            ,'./69C'
             ,'./iPARTS'
-            ,'./4L_23C'
-            ,'./5K_46C_K10'
-            ,'./5K_46C_K30'
-            ,'./5K_46C_K60'
-            ,'./5K_46C_K90'
-            ,'./iter02_23C']
+            ,'./SARA']
     Research_information = '_FSCOR_'
     distanceZERO = '0_'
     distanceTWO = '2_'
@@ -23,6 +16,7 @@ def calculate_AUC():
     output_path = 'FSCOR_result'
     Cal_list = ['SAS','SI','MI','RAW']
     result_list = []
+    '''
     for line in Cal_list:
         for cal_line in list:
             cmd = 'ROC.sh '+cal_line+Research_information+distanceZERO+line+output_file
@@ -64,7 +58,42 @@ def calculate_AUC():
     with open(output_path,'w') as file:
         for line in result_list:
             file.write(line.replace('\n','')+'\n')
+    '''
+    mean_list = []
 
+    for line in Cal_list:
+        count_size = 0
+        calculate_sum  = 0.0
+        for cal_line in list:
+            file = cal_line+Research_information+distanceZERO+line+another
+            mean_list.append(file) 
+            try:
+                with open(file,'r') as file:
+                    for line2 in file:
+                        calculate_sum+=float(line2.replace('p,p,','').replace('n,p,','').replace('\n',''))
+                        count_size+=1
+                mean_list.append(str(float(calculate_sum/count_size)))
+            except:
+                pass
+
+    for line in Cal_list:
+        count_size=0
+        calculate_sum = 0.0
+        for cal_line in list:
+            file = cal_line+Research_information+distanceTWO+line+another
+            mean_list.append(file)
+            try:
+                with open(file,'r') as file:
+                    for line2 in file:
+                        calculate_sum+=float(line2.replace('p,p,','').replace('n,p,','').replace('\n',''))
+                        count_size+=1
+                mean_list.append(str(float(calculate_sum/count_size)))
+            except:
+                pass
+
+    with open('FSCOR_mean_result','w') as file:
+        for line in mean_list:
+            file.write(line+'\n')
 if __name__=='__main__':
     try:
         list = []
