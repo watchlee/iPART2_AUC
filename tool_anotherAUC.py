@@ -11,7 +11,9 @@
 import subprocess
 #######################################################################
 #   當初d<=2的測試用的資料 是錯的但沒辦法還原 所以使用此方法代替
-read_file = open('../processed_eachto418_d2','r')
+
+#   發現processed_eachto418_d2的資料有誤，改用新的
+read_file = open('../new_processed_eachto418_d2','r')
 bigfamily_compare = read_file.read()
 read_file.close()
 #######################################################################
@@ -217,6 +219,8 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     d2SAS_list = []
     d2MI_list = []
     d2SI_list = []
+    special_list = []
+    sameParent_list = []
     for index in range(len(FSCOR_list)):
         for inner_index in range(index+1,len(FSCOR_list)):
             if(index!=inner_index):
@@ -316,23 +320,29 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                     SI = 0
                     MI = 0
                     SAS = 0
+                special_list.append(file_document_name+' RMSD:'+str(min)+' align:'+str(align_length)+' first_seq:'+str(gap_num_seq1)+' second_seq:'+str(gap_num_seq2)+' SAS:'+str(SAS)) 
                 if(FSCOR_list[index].get_family()==FSCOR_list[inner_index].get_family()):
-                    dSAS_list.append('p,p,'+str(SAS))
+                #    if(min<3):
+                 #       special_list.append(file_document_name+' pdb_min:'+str(min)+' align:'+str(align_length)+' gpa1:'+str(gap_num_seq1)+' gap2:'+str(gap_num_seq2)+' '+str(SAS)) 
+                    dSAS_list.append('p,p '+str(SAS))
                     dSI_list.append('p,p,'+str(SI))
                     dMI_list.append('p,p,'+str(MI))
+                    sameParent_list.append(file_document_name+' p,p')
                 else:
-                    dSAS_list.append('n,p,'+str(SAS))
+                    dSAS_list.append('n,p '+str(SAS))
                     dSI_list.append('n,p,'+str(SI))
                     dMI_list.append('n,p,'+str(MI))
                 pdb_name = FSCOR_list[index].get_pdb()+'_to_'+FSCOR_list[inner_index].get_pdb()
                 pdb_name2 = FSCOR_list[inner_index].get_pdb()+'_to_'+FSCOR_list[index].get_pdb()
                 d_list.append(pdb_name+' pdb_min = '+str(min)+' align= '+str(align_length)+' gpa1='+str(gap_num_seq1)+' gap2='+str(gap_num_seq2)) 
                 result = search_family(pdb_name,pdb_name2)
-                d2SAS_list.append(result+str(SAS))
+                d2SAS_list.append(result+' '+str(SAS))
                 d2SI_list.append(result+str(SI))
                 d2MI_list.append(result+str(MI))
     ###WRITE_FILE('center46_FSCOR_0_log',dlist)
     ###WRITE_FILE('center46_FSCOR_2_log',d2list)
+    WRITE_FILE(outfile+'_sameParent',sameParent_list)
+    WRITE_FILE(outfile+'_special_another',special_list)
     WRITE_FILE(outfile+'_log_another',d_list)
     WRITE_FILE(outfile+'_0_SAS_another',dSAS_list)
     WRITE_FILE(outfile+'_0_SI_another',dSI_list)
@@ -602,6 +612,7 @@ def lost_FSCOR_Process(FSCOR_document_path,outfile):
 ###############################################################
 if __name__ =='__main__':
     FSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_FSCOR.sa")
+    #FSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_FSCOR_watchlee_under1K")
     ###TEST(FSCOR_list)
     TtoR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_TtoR-FSCOR.sa")
     ###TEST(TtoR_list)
@@ -682,7 +693,7 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
 
-    F_index =31
+    F_index =0
     T_index =17  
     TtoR_document_path = TtoR_file[T_index]
     FSCOR_document_path = FSCOR_file[F_index]
@@ -693,16 +704,22 @@ if __name__ =='__main__':
     #Raw_TtoR_Process(TtoR_list,TtoR_file[T_index],TtoR_output_file[T_index])
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[F_index],FSCOR_output_file[F_index])
    # for index in range(len(FSCOR_output_file)):
-    for index in range(0,6):
-        FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+    #for index in range(0,6):
+    #    FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
     #    TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
     #    Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
-        Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
+    #    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
 
 #    lost_FSCOR_Process(FSCOR_file[5],FSCOR_output_file[5])
-'''
     FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
-    FSCOR_Process(FSCOR_list,FSCOR_file[1],FSCOR_output_file[1])
-    FSCOR_Process(FSCOR_list,FSCOR_file[3],FSCOR_output_file[3])
-    FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
-'''
+    #FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
+    #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
+    #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
+    #FSCOR_Process(FSCOR_list,FSCOR_file[3],FSCOR_output_file[3])
+    #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[3],FSCOR_output_file[3])
+    #TtoR_Process(TtoR_list,TtoR_file[0],TtoR_output_file[0])
+    #TtoR_Process(TtoR_list,TtoR_file[3],TtoR_output_file[3])
+    #TtoR_Process(TtoR_list,TtoR_file[5],TtoR_output_file[5])
+    #Raw_TtoR_Process(TtoR_list,TtoR_file[0],TtoR_output_file[0])
+    #Raw_TtoR_Process(TtoR_list,TtoR_file[3],TtoR_output_file[3])
+    #Raw_TtoR_Process(TtoR_list,TtoR_file[5],TtoR_output_file[5])
