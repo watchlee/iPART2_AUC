@@ -295,7 +295,7 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                         ###print file_document_name2+' length = '+str(temp_length)+' gap1= '+str(temp_gap_seq1)+' gap2 ='+str(temp_gap_seq2)
                         pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                         compare_list.append(pdb)
-                if(len(seq1)!=len(seq2)):
+                if(len(seq1.replace('\n',''))!=len(seq2.replace('\n',''))):
                     print file_document_name+' not equal'+str(len(seq1))+' '+str(len(seq2))
                 else:
                     print file_document_name+' equal'
@@ -523,7 +523,10 @@ def lost_FSCOR_Process(FSCOR_document_path,outfile):
     d2SI_list = []
 
     lost_FSCOR_AUC_list = []
-    with open('./lost_family_FSCOR','r') as file: 
+    #someone give me the fail file!
+    #with open('./lost_family_FSCOR','r') as file: 
+    with open('./list','r') as file: 
+    #with open('./Empty_Error','r') as file:
         for line in file:
             lost_FSCOR_AUC_list.append(line)
     for line in lost_FSCOR_AUC_list:
@@ -567,7 +570,7 @@ def lost_FSCOR_Process(FSCOR_document_path,outfile):
                 ###print file_document_name+' length='+str(temp_length)+' gap1='+str(temp_gap_seq1)+' gap2='+str(temp_gap_seq2)
                 pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
                 compare_list.append(pdb)
-        if(len(seq1)!=len(seq2)):
+        if(len(seq1.replace('\n',''))!=len(seq2.replace('\n',''))):
             print compare_pdb_name+' not equal'+str(len(seq1))+' '+str(len(seq2))
         else:
             print compare_pdb_name+' equal'
@@ -597,6 +600,7 @@ def lost_FSCOR_Process(FSCOR_document_path,outfile):
         dMI_list.append(compare_result+','+str(MI))
         ###d_list.append(pdb_name+' pdb_min = '+str(min)+' align= '+str(align_length)+' gpa1='+str(gap_num_seq1)+' gap2='+str(gap_num_seq2)) 
         result = search_family(compare_pdb_name,compare_pdb_name)
+        d_list.append(compare_pdb_name+' '+compare_result+' '+result+' '+str(min)+' '+str(SAS)+' '+str(align_length)+' '+str(gap_num_seq1)+' '+str(gap_num_seq2))
         d2SAS_list.append(result+str(SAS))
         d2SI_list.append(result+str(SI))
         d2MI_list.append(result+str(MI))
@@ -710,8 +714,9 @@ if __name__ =='__main__':
     #    Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
     #    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
 
-#    lost_FSCOR_Process(FSCOR_file[5],FSCOR_output_file[5])
-    FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
+    lost_FSCOR_Process(FSCOR_file[0],FSCOR_output_file[0])
+    #FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
+    #FSCOR_Process(FSCOR_list,FSCOR_file[3],FSCOR_output_file[3])
     #FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
