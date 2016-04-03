@@ -41,11 +41,15 @@ class Compare_pdb:
     num_gap1 = 0
     num_gap2 = 0
     length_align =0
-    def __init__(self,RMSD,num_gap1,num_gap2,length_align):
+    match = 0
+    def __init__(self,RMSD,num_gap1,num_gap2,length_align,match):
         self.RMSD = RMSD
         self.num_gap1 = num_gap1
         self.num_gap2 = num_gap2
         self.length_align = length_align
+        self.match = match
+    def getMatch(self):
+        return self.match
     def getRMSD(self):
         return self.RMSD
     def get_gap1(self):
@@ -217,6 +221,8 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
     dSI_list = []
     dMI_list = []
     d2SAS_list = []
+    d2SAS_analysis_list = []
+    dSAS_analysis_list = []
     d2MI_list = []
     d2SI_list = []
     special_list = []
@@ -244,6 +250,7 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                         temp_gap_seq1 = 0
                         temp_gap_seq2 = 0
                         temp_length = 0
+                        temp_match = 0
                         with open(FSCOR_document_path+file_document_name+'/profit_log'+str(loop),'r') as file:
                             for each_line in file:
                                 if(each_line.find('RMS')!=-1):
@@ -261,8 +268,10 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                                 temp_gap_seq2+=1
                             if(seq1[i]!='-' and seq2[i]!='-'):
                                 temp_length+=1
+                            if(seq1[i]!='-' and seq2[i]!='-' and seq1[i]==seq2[i]):
+                                temp_match+=1
                         ###print file_document_name+' length='+str(temp_length)+' gap1='+str(temp_gap_seq1)+' gap2='+str(temp_gap_seq2)
-                        pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
+                        pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length,temp_match)
                         compare_list.append(pdb)
                 except:
                     with open(FSCOR_document_path+file_document_name2+'/semiG_result.php','r') as file:
@@ -275,6 +284,7 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                         temp_gap_seq1 = 0
                         temp_gap_seq2 = 0
                         temp_length = 0
+                        temp_match = 0
                         with open(FSCOR_document_path+file_document_name2+'/profit_log'+str(loop),'r') as file:
                             for each_line in file:
                                 if(each_line.find('RMS')!=-1):
@@ -292,8 +302,10 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                                 temp_gap_seq2+=1
                             if(seq1[i]!='-' and seq2[i]!='-'):
                                 temp_length+=1
+                            if(seq1[i]!='-' and seq2[i]!='-' and seq1[i]==seq2[i]):
+                                temp_match+=1
                         ###print file_document_name2+' length = '+str(temp_length)+' gap1= '+str(temp_gap_seq1)+' gap2 ='+str(temp_gap_seq2)
-                        pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length)
+                        pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length,temp_match)
                         compare_list.append(pdb)
                 if(len(seq1.replace('\n',''))!=len(seq2.replace('\n',''))):
                     print file_document_name+' not equal'+str(len(seq1))+' '+str(len(seq2))
@@ -303,12 +315,14 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                 gap_num_seq1 = compare_list[0].get_gap1()
                 gap_num_seq2 = compare_list[0].get_gap2()
                 align_length = compare_list[0].get_align()
+                match = compare_list[0].getMatch() 
                 for i in range(1,len(compare_list)):
                     if(min > compare_list[i].getRMSD()):
                         min = compare_list[i].getRMSD()
                         gap_num_seq1 = compare_list[i].get_gap1()
                         gap_num_seq2 = compare_list[i].get_gap2()
                         align_length = compare_list[i].get_align()
+                        match = compare_list[i].getMatch() 
                 try:
                     SAS = min*100 / align_length
                     SAS = 0 - SAS
@@ -320,27 +334,40 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                     SI = 0
                     MI = 0
                     SAS = 0
-                special_list.append(file_document_name+' RMSD:'+str(min)+' align:'+str(align_length)+' first_seq:'+str(gap_num_seq1)+' second_seq:'+str(gap_num_seq2)+' SAS:'+str(SAS)) 
+                temp_deter=''
                 if(FSCOR_list[index].get_family()==FSCOR_list[inner_index].get_family()):
                 #    if(min<3):
-                 #       special_list.append(file_document_name+' pdb_min:'+str(min)+' align:'+str(align_length)+' gpa1:'+str(gap_num_seq1)+' gap2:'+str(gap_num_seq2)+' '+str(SAS)) 
+                    #special_list.append(file_document_name+' pdb_min:'+str(min)+' align:'+str(align_length)+' gpa1:'+str(gap_num_seq1)+' gap2:'+str(gap_num_seq2)+' '+str(SAS)) 
                     dSAS_list.append('p,p '+str(SAS))
+                #分析用
+                    dSAS_analysis_list.append('p,p '+str(SAS)+' '+file_document_name)
                     dSI_list.append('p,p,'+str(SI))
                     dMI_list.append('p,p,'+str(MI))
                     sameParent_list.append(file_document_name+' p,p')
+                    temp_deter=' d=0: p,p '
                 else:
+                #分析用
+                    dSAS_analysis_list.append('n,p '+str(SAS)+' '+file_document_name)
                     dSAS_list.append('n,p '+str(SAS))
                     dSI_list.append('n,p,'+str(SI))
                     dMI_list.append('n,p,'+str(MI))
+                    temp_deter=' d=0: n,p '
+
                 pdb_name = FSCOR_list[index].get_pdb()+'_to_'+FSCOR_list[inner_index].get_pdb()
                 pdb_name2 = FSCOR_list[inner_index].get_pdb()+'_to_'+FSCOR_list[index].get_pdb()
                 d_list.append(pdb_name+' pdb_min = '+str(min)+' align= '+str(align_length)+' gpa1='+str(gap_num_seq1)+' gap2='+str(gap_num_seq2)) 
                 result = search_family(pdb_name,pdb_name2)
-                d2SAS_list.append(result+' '+str(SAS))
+                temp_deter=temp_deter+'d<=2: '+result
+                d2SAS_list.append(result+str(SAS))
+                #分析用
+                d2SAS_analysis_list.append(result+str(SAS)+' '+file_document_name)
                 d2SI_list.append(result+str(SI))
                 d2MI_list.append(result+str(MI))
+                special_list.append(file_document_name+' RMSD:'+str(min)+' align:'+str(align_length)+' first_seq:'+str(gap_num_seq1)+' second_seq:'+str(gap_num_seq2)+' SAS:'+str(SAS)+temp_deter+' match:'+str(match)) 
     ###WRITE_FILE('center46_FSCOR_0_log',dlist)
     ###WRITE_FILE('center46_FSCOR_2_log',d2list)
+    WRITE_FILE(outfile+'_0_SAS_another_analysis',dSAS_analysis_list)
+    WRITE_FILE(outfile+'_2_SAS_another_analysis',d2SAS_analysis_list)
     WRITE_FILE(outfile+'_sameParent',sameParent_list)
     WRITE_FILE(outfile+'_special_another',special_list)
     WRITE_FILE(outfile+'_log_another',d_list)
@@ -493,6 +520,7 @@ def search_family(pdb_name,pdb_name2):
         count = bigfamily_compare.find(pdb_name2)
         for index in range(count+17,count+21):
             result+=bigfamily_compare[index]
+    result=result.replace('\n','')+' '
     return result
 #######################################################################
 def MIN(numberA,numberB):
@@ -595,9 +623,9 @@ def lost_FSCOR_Process(FSCOR_document_path,outfile):
             SI = 0
             MI = 0
             SAS = 0
-        dSAS_list.append(compare_result+','+str(SAS))
-        dSI_list.append(compare_result+','+str(SI))
-        dMI_list.append(compare_result+','+str(MI))
+        dSAS_list.append(compare_result+' '+str(SAS))
+        dSI_list.append(compare_result+' '+str(SI))
+        dMI_list.append(compare_result+' '+str(MI))
         ###d_list.append(pdb_name+' pdb_min = '+str(min)+' align= '+str(align_length)+' gpa1='+str(gap_num_seq1)+' gap2='+str(gap_num_seq2)) 
         result = search_family(compare_pdb_name,compare_pdb_name)
         d_list.append(compare_pdb_name+' '+compare_result+' '+result+' '+str(min)+' '+str(SAS)+' '+str(align_length)+' '+str(gap_num_seq1)+' '+str(gap_num_seq2))
@@ -657,9 +685,12 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter11_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_new_23C_4L_matrix-O15E0.5-SARA_FSCOR_new_23C_4L-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O9E1-SARA_FSCOR_23C_4L_result-semiG.job/']
 
-    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR','iter08_23_FSCOR','iter09_23_FSCOR','iter09_23_MI_FSCOR','iter10_23_FSCOR','iter10_23_MI_FSCOR','iter11_SARA_FSCOR','iter11_23_FSCOR','iter11_SARA2_FSCOR','iter09_SARA_FSCOR','iter12_23_FSCOR','iter09_true_FSCOR','iter09_true_SARA_FSCOR','iter10_true_FSCOR','iter11_true_FSCOR','iter12_true_FSCOR','iter13_23_FSCOR','iter14_23_FSCOR']
+
+    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR','iter08_23_FSCOR','iter09_23_FSCOR','iter09_23_MI_FSCOR','iter10_23_FSCOR','iter10_23_MI_FSCOR','iter11_SARA_FSCOR','iter11_23_FSCOR','iter11_SARA2_FSCOR','iter09_SARA_FSCOR','iter12_23_FSCOR','iter09_true_FSCOR','iter09_true_SARA_FSCOR','iter10_true_FSCOR','iter11_true_FSCOR','iter12_true_FSCOR','iter13_23_FSCOR','iter14_23_FSCOR','new_23C_4L_FSCOR','final_23C_4L_FSCOR']
 ###TtoR setting input file 
     TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR','iter02_23C_TtoR','iter03_23C_TtoR','iter04_23C_TtoR','iter05_23C_TtoR','iter02_MI_TtoR','iter07_23_TtoR','iter08_23_TtoR','iter09_23_TtoR','iter09_23_MI_TtoR','iter10_23_TtoR','iter10_23_MI_TtoR','iter11_SARA_TtoR','iter11_23_TtoR','iter11_SARA2_TtoR','iter09_SARA_TtoR','iter12_23_TtoR','iter09_true_TtoR','iter09_true_SARA_TtoR','iter10_true_TtoR','iter11_true_TtoR','iter12_true_TtoR','iter13_23_TtoR','iter14_23_TtoR']
     TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/"
@@ -695,7 +726,9 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter11_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O9E1-SARA_FSCOR_23C_4L_result-semiG.job/']
+                
 
     F_index =0
     T_index =17  
@@ -714,8 +747,10 @@ if __name__ =='__main__':
     #    Raw_TtoR_Process(TtoR_list,TtoR_file[index],TtoR_output_file[index])
     #    Raw_FSCOR_Process(FSCOR_list,FSCOR_file[index],FSCOR_output_file[index])
 
-    lost_FSCOR_Process(FSCOR_file[0],FSCOR_output_file[0])
-    #FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
+    #lost_FSCOR_Process(FSCOR_file[0],FSCOR_output_file[0])
+    #lost_FSCOR_Process(FSCOR_file[3],FSCOR_output_file[3])
+    #lost_FSCOR_Process(FSCOR_file[5],FSCOR_output_file[5])
+    FSCOR_Process(FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1])
     #FSCOR_Process(FSCOR_list,FSCOR_file[3],FSCOR_output_file[3])
     #FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
