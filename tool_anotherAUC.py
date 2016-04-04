@@ -36,6 +36,13 @@ class PDB_DATA:
     def test(self):
         return self.big_family+' '+self.family+' '+self.pdb_name
 #######################################################################
+#-----------------------Converting string into floating or integer number-------------------------------#
+def num(value):
+    try:
+        return int(value)
+    except ValueError:
+        return float(value)
+#######################################################################
 class Compare_pdb:
     RMSD= 0
     num_gap1 = 0
@@ -212,6 +219,183 @@ def Raw_TtoR_Process(TtoR_list,TtoR_document_path,outfile):
     return
 #######################################################################
 
+def PSI_Process(FSCOR_list,FSCOR_document_path,outfile):
+    #count = 0
+    d_list = []
+    dPSI_list=[]
+    d2PSI_list = []
+    d2PSI_analysis_list = []
+    dPSI_analysis_list = []
+    special_list = []
+    sameParent_list = []
+    for index in range(len(FSCOR_list)):
+        for inner_index in range(index+1,len(FSCOR_list)):
+            if(index!=inner_index):
+                file_document_name = FSCOR_list[index].get_pdb()+'_to_'+FSCOR_list[inner_index].get_pdb()
+                file_document_name2 = FSCOR_list[inner_index].get_pdb()+'_to_'+FSCOR_list[index].get_pdb()
+                context_length = 0
+                min = 0
+                align_length = 0
+                gap_num_seq1 = 0
+                gap_num_seq2 = 0
+                compare_list=[]
+                seq1=''
+                seq2=''
+                #---------------------計算ＰＳＩ用的value
+                PSI_times=0
+                #---------------因為不知道A_to_B or B_to_A才這樣寫---------------------#
+                try:
+                    with open(FSCOR_document_path+file_document_name+'/semiG_result.php','r') as file:
+                        for each_line in file:
+                            context_length+=1
+                    times = context_length / 7
+                    for loop in range(times):
+                        temp_gap_seq1 = 0
+                        temp_gap_seq2 = 0
+                        temp_length = 0
+                        temp_match = 0
+                        '''
+                        In order to handle the reference problem, we have to use another way to calculate AUC, which calculating by PSI
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_P'+str(loop),'r') as file:
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_C3'+str(loop),'r') as file:
+                     
+                        '''
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_S'+str(loop),'r') as file:
+                            #要找每一個核甘酸的RMSD 整體的不要找
+                            for each_line in file:
+                                try:
+                                    if(each_line.find('RMS')!=-1):
+                                        if(num(each_line.split(':')[2].replace(' ',''))<=4.0):
+                                            PSI_times+=1
+                                except:
+                                    #-----第一個RMSD忽略掉
+                                    pass
+                                #找出RMS判斷是否<=4
+                                #若為0則全部設為0
+                                
+                        context_list = []
+                        with open(FSCOR_document_path+file_document_name+'/ori_ali_seq.pir'+str(loop),'r') as file:
+                            for each_line in file:
+                                context_list.append(each_line)
+                        seq1 = context_list[2]
+                        seq2 = context_list[5]
+                        for i in range(0,len(seq1)-2):
+                            if(seq1[i]!='-'):
+                                temp_gap_seq1+=1
+                            if(seq2[i]!='-'):
+                                temp_gap_seq2+=1
+                            if(seq1[i]!='-' and seq2[i]!='-'):
+                                temp_length+=1
+                            if(seq1[i]!='-' and seq2[i]!='-' and seq1[i]==seq2[i]):
+                                temp_match+=1
+                        ###print file_document_name+' length='+str(temp_length)+' gap1='+str(temp_gap_seq1)+' gap2='+str(temp_gap_seq2)
+                        pdb = Compare_pdb(PSI_times,temp_gap_seq1,temp_gap_seq2,temp_length,temp_match)
+                        compare_list.append(pdb)
+                except:
+                    with open(FSCOR_document_path+file_document_name2+'/semiG_result.php','r') as file:
+                        for each_line in file:
+                            context_list.append(each_line)
+                            context_length+=1
+                        times = context_length / 7
+                    for loop in range(times):
+                        temp_gap_seq1 = 0
+                        temp_gap_seq2 = 0
+                        temp_length = 0
+                        temp_match = 0
+                        '''
+                        In order to handle the reference problem, we have to use another way to calculate AUC, which calculating by PSI
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_P'+str(loop),'r') as file:
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_C3'+str(loop),'r') as file:
+                
+                        '''
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_S'+str(loop),'r') as file:
+                            #要找每一個核甘酸的RMSD 整體的不要找
+                            for each_line in file:
+                                try:
+                                    if(each_line.find('RMS')!=-1):
+                                        if(num(each_line.split(':')[2].replace(' ',''))<=4.0):
+                                            PSI_times+=1
+                                except:
+                                    #-----第一個RMSD忽略掉
+                                    pass
+                                #找出RMS判斷是否<=4
+                                #若為0則全部設為0
+                                
+                  
+                        context_list = []
+                        with open(FSCOR_document_path+file_document_name2+'/ori_ali_seq.pir'+str(loop),'r') as file:
+                            for each_line in file:
+                                context_list.append(each_line)
+                        seq1 = context_list[2]
+                        seq2 = context_list[5]
+                        for i in range(0,len(seq1)-2):
+                            if(seq1[i]!='-'):
+                                temp_gap_seq1+=1
+                            if(seq2[i]!='-'):
+                                temp_gap_seq2+=1
+                            if(seq1[i]!='-' and seq2[i]!='-'):
+                                temp_length+=1
+                            if(seq1[i]!='-' and seq2[i]!='-' and seq1[i]==seq2[i]):
+                                temp_match+=1
+                        ###print file_document_name2+' length = '+str(temp_length)+' gap1= '+str(temp_gap_seq1)+' gap2 ='+str(temp_gap_seq2)
+                        #------------------------處理PSI情況----------------------------#
+                        pdb = Compare_pdb(PSI_times,temp_gap_seq1,temp_gap_seq2,temp_length,temp_match)
+                        compare_list.append(pdb)
+                if(len(seq1.replace('\n',''))!=len(seq2.replace('\n',''))):
+                    print file_document_name+' not equal'+str(len(seq1))+' '+str(len(seq2))
+                else:
+                    print file_document_name+' equal'
+                #----get PSI times
+                min = compare_list[0].getRMSD()
+                print min
+                gap_num_seq1 = compare_list[0].get_gap1()
+                gap_num_seq2 = compare_list[0].get_gap2()
+                align_length = compare_list[0].get_align()
+                match = compare_list[0].getMatch() 
+                for i in range(1,len(compare_list)):
+                    if(min > compare_list[i].getRMSD()):
+                        min = compare_list[i].getRMSD()
+                        gap_num_seq1 = compare_list[i].get_gap1()
+                        gap_num_seq2 = compare_list[i].get_gap2()
+                        align_length = compare_list[i].get_align()
+                        match = compare_list[i].getMatch() 
+                
+                try:
+                    PSI = 100* min / align_length 
+                    PSI= 0 - PSI
+                except:
+                    PSI=0
+                temp_deter=''
+                if(FSCOR_list[index].get_family()==FSCOR_list[inner_index].get_family()):
+                #    if(min<3):
+                    #special_list.append(file_document_name+' pdb_min:'+str(min)+' align:'+str(align_length)+' gpa1:'+str(gap_num_seq1)+' gap2:'+str(gap_num_seq2)+' '+str(PSI)) 
+                    dPSI_list.append('p,p '+str(PSI))
+                #分析用
+                    dPSI_analysis_list.append('p,p '+str(PSI)+' '+file_document_name)
+                    sameParent_list.append(file_document_name+' p,p')
+                    temp_deter=' d=0: p,p '
+                else:
+                #分析用
+                    dPSI_analysis_list.append('n,p '+str(PSI)+' '+file_document_name)
+                    dPSI_list.append('n,p '+str(PSI))
+                    temp_deter=' d=0: n,p '
+
+                pdb_name = FSCOR_list[index].get_pdb()+'_to_'+FSCOR_list[inner_index].get_pdb()
+                pdb_name2 = FSCOR_list[inner_index].get_pdb()+'_to_'+FSCOR_list[index].get_pdb()
+                d_list.append(pdb_name+' pdb_min = '+str(min)+' align= '+str(align_length)+' gpa1='+str(gap_num_seq1)+' gap2='+str(gap_num_seq2)) 
+                result = search_family(pdb_name,pdb_name2)
+                temp_deter=temp_deter+'d<=2: '+result
+                d2PSI_list.append(result+str(PSI))
+                #分析用
+                d2PSI_analysis_list.append(result+str(PSI)+' '+file_document_name)
+                special_list.append(file_document_name+' RMSD:'+str(min)+' align:'+str(align_length)+' first_seq:'+str(gap_num_seq1)+' second_seq:'+str(gap_num_seq2)+' PSI:'+str(PSI)+temp_deter+' match:'+str(match)) 
+    WRITE_FILE(outfile+'_0_PSI_another_analysis',dPSI_analysis_list)
+    WRITE_FILE(outfile+'_2_PSI_another_analysis',d2PSI_analysis_list)
+    WRITE_FILE(outfile+'_sameParent',sameParent_list)
+    WRITE_FILE(outfile+'_special_another',special_list)
+    WRITE_FILE(outfile+'_log_another',d_list)
+    WRITE_FILE(outfile+'_0_PSI_another',dPSI_list)
+    WRITE_FILE(outfile+'_2_PSI_another',d2PSI_list)
 
 #######################################################################
 def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
@@ -240,6 +424,9 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                 compare_list=[]
                 seq1=''
                 seq2=''
+                #---------------------計算ＰＳＩ用的value
+                #PSI_times=0
+                #---------------因為不知道A_to_B or B_to_A才這樣寫---------------------#
                 try:
                     with open(FSCOR_document_path+file_document_name+'/semiG_result.php','r') as file:
                         for each_line in file:
@@ -251,10 +438,31 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                         temp_gap_seq2 = 0
                         temp_length = 0
                         temp_match = 0
+                        '''
+                        In order to handle the reference problem, we have to use another way to calculate AUC, which calculating by PSI
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_P'+str(loop),'r') as file:
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_C3'+str(loop),'r') as file:
+                     
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_*'+str(loop),'r') as file:
+                            #要找每一個核甘酸的RMSD 整體的不要找
+                            for each_line in file:
+                                try:
+                                    if(each_line.find('RMS')!=-1):
+                                        if(num(each_line.split(':')[2].replace(' ',''))<-4.0):
+                                            PSI_times+=1
+                                except:
+                                    #-----第一個RMSD忽略掉
+                                    pass
+                                #找出RMS判斷是否<=4
+                                #若為0則全部設為0
+                                
+                        '''
+
                         with open(FSCOR_document_path+file_document_name+'/profit_log'+str(loop),'r') as file:
                             for each_line in file:
                                 if(each_line.find('RMS')!=-1):
                                     temp_RMSD = float(each_line.replace('RMS:',''))
+                       
                         context_list = []
                         with open(FSCOR_document_path+file_document_name+'/ori_ali_seq.pir'+str(loop),'r') as file:
                             for each_line in file:
@@ -285,10 +493,31 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                         temp_gap_seq2 = 0
                         temp_length = 0
                         temp_match = 0
+                        '''
+                        In order to handle the reference problem, we have to use another way to calculate AUC, which calculating by PSI
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_P'+str(loop),'r') as file:
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_C3'+str(loop),'r') as file:
+                
+                        with open(FSCOR_document_path+file_document_name+'/profit_log_*'+str(loop),'r') as file:
+                            #要找每一個核甘酸的RMSD 整體的不要找
+                            for each_line in file:
+                                try:
+                                    if(each_line.find('RMS')!=-1):
+                                        if(num(each_line.split(':')[2].replace(' ',''))<-4.0):
+                                            PSI_times+=1
+                                except:
+                                    #-----第一個RMSD忽略掉
+                                    pass
+                                #找出RMS判斷是否<=4
+                                #若為0則全部設為0
+                                
+                        '''
+
                         with open(FSCOR_document_path+file_document_name2+'/profit_log'+str(loop),'r') as file:
                             for each_line in file:
                                 if(each_line.find('RMS')!=-1):
                                     temp_RMSD = float(each_line.replace('RMS:',''))
+                  
                         context_list = []
                         with open(FSCOR_document_path+file_document_name2+'/ori_ali_seq.pir'+str(loop),'r') as file:
                             for each_line in file:
@@ -305,7 +534,10 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                             if(seq1[i]!='-' and seq2[i]!='-' and seq1[i]==seq2[i]):
                                 temp_match+=1
                         ###print file_document_name2+' length = '+str(temp_length)+' gap1= '+str(temp_gap_seq1)+' gap2 ='+str(temp_gap_seq2)
+                        #------------------------處理一般RMSD情況----------------------#
                         pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length,temp_match)
+                        #------------------------處理PSI情況----------------------------#
+                        #pdb = Compare_pdb(temp_RMSD,temp_gap_seq1,temp_gap_seq2,temp_length,temp_match)
                         compare_list.append(pdb)
                 if(len(seq1.replace('\n',''))!=len(seq2.replace('\n',''))):
                     print file_document_name+' not equal'+str(len(seq1))+' '+str(len(seq2))
@@ -323,7 +555,9 @@ def FSCOR_Process(FSCOR_list,FSCOR_document_path,outfile):
                         gap_num_seq2 = compare_list[i].get_gap2()
                         align_length = compare_list[i].get_align()
                         match = compare_list[i].getMatch() 
+                
                 try:
+                         
                     SAS = min*100 / align_length
                     SAS = 0 - SAS
                     SI = (min * MIN(gap_num_seq1,gap_num_seq2))/align_length
@@ -578,9 +812,11 @@ def lost_FSCOR_Process(FSCOR_document_path,outfile):
                 temp_gap_seq1 = 0
                 temp_gap_seq2 = 0
                 temp_length = 0
+                print FSCOR_document_path+compare_pdb_name+'/profit_log'+str(loop)
                 with open(FSCOR_document_path+compare_pdb_name+'/profit_log'+str(loop),'r') as file:
                     for each_line in file:
                         if(each_line.find('RMS')!=-1):
+                            print each_line.replace('RMS:','')
                             temp_RMSD = float(each_line.replace('RMS:',''))
                 context_list = []
                 with open(FSCOR_document_path+compare_pdb_name+'/ori_ali_seq.pir'+str(loop),'r') as file:
@@ -750,7 +986,7 @@ if __name__ =='__main__':
     #lost_FSCOR_Process(FSCOR_file[0],FSCOR_output_file[0])
     #lost_FSCOR_Process(FSCOR_file[3],FSCOR_output_file[3])
     #lost_FSCOR_Process(FSCOR_file[5],FSCOR_output_file[5])
-    FSCOR_Process(FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1])
+    #FSCOR_Process(FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1])
     #FSCOR_Process(FSCOR_list,FSCOR_file[3],FSCOR_output_file[3])
     #FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
@@ -763,3 +999,5 @@ if __name__ =='__main__':
     #Raw_TtoR_Process(TtoR_list,TtoR_file[0],TtoR_output_file[0])
     #Raw_TtoR_Process(TtoR_list,TtoR_file[3],TtoR_output_file[3])
     #Raw_TtoR_Process(TtoR_list,TtoR_file[5],TtoR_output_file[5])
+    PSI_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
+    PSI_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
