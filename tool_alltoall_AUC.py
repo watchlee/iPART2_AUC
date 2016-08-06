@@ -12,7 +12,7 @@ import subprocess
 #######################################################################
 #   當初d<=2的測試用的資料 是錯的但沒辦法還原 所以使用此方法代替
 #   發現processed_eachto418_d2的資料有誤，改用新的
-read_file = open('../new_processed_eachto418_d2','r')
+read_file = open('./new_processed_eachto418_d2','r')
 bigfamily_compare = read_file.read()
 read_file.close()
 #######################################################################
@@ -403,7 +403,7 @@ def PSI_Process(FSCOR_list,FSCOR_document_path,outfile,atom):
                             for each_line in file:
                                 try:
                                     if(each_line.find('RMS')!=-1):
-                                        if(num(each_line.split(':')[2].replace(' ',''))<=4.0):
+                                        if(num(each_line.split(':')[2].replace(' ',''))<=6):
                                             PSI_times+=1
                                 except:
                                     #-----第一個RMSD忽略掉
@@ -451,7 +451,7 @@ def PSI_Process(FSCOR_list,FSCOR_document_path,outfile,atom):
                             for each_line in file:
                                 try:
                                     if(each_line.find('RMS')!=-1):
-                                        if(num(each_line.split(':')[2].replace(' ',''))<=4.0):
+                                        if(num(each_line.split(':')[2].replace(' ',''))<=6):
                                             PSI_times+=1
                                 except:
                                     #-----第一個RMSD忽略掉
@@ -1788,7 +1788,12 @@ def lost_FSCOR_Process(FSCOR_document_path,outfile):
     WRITE_FILE(outfile+'_2_SAS_another_lost',d2SAS_list)
 ###############################################################
 if __name__ =='__main__':
+    #沒有 132筆
+    #without_intersection_FSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_FSCOR_without_intersection")
+    #沒有165筆
+    without_intersection_FSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_FSCOR_withoutIntersection_listandmatrix")
     FSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_FSCOR.sa")
+    #FSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_FSCOR_watchlee_under1K")
     TFSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_T")
     #FSCOR_list = read_file("/home/watchlee/Research_Programming/research_data/inputDataset/SARA_FSCOR_watchlee_under1K")
     ###TEST(FSCOR_list)
@@ -1832,10 +1837,11 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_new_23C_4L_matrix-O15E0.5-SARA_FSCOR_new_23C_4L-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O9E1-SARA_FSCOR_23C_4L_result-semiG.job/']
-    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR','iter08_23_FSCOR','iter09_23_FSCOR','iter09_23_MI_FSCOR','iter10_23_FSCOR','iter10_23_MI_FSCOR','iter11_SARA_FSCOR','iter11_23_FSCOR','iter11_SARA2_FSCOR','iter09_SARA_FSCOR','iter12_23_FSCOR','iter09_true_FSCOR','iter09_true_SARA_FSCOR','iter10_true_FSCOR','iter11_true_FSCOR','iter12_true_FSCOR','iter13_23_FSCOR','iter14_23_FSCOR','new_23C_4L_FSCOR','final_23C_4L_FSCOR']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O9E1-SARA_FSCOR_23C_4L_result-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/SARA_23C_4L_matrix-O8E2-SARA_FSCOR_new_23C_4L-semiG.job/']
+    FSCOR_output_file = ['23C_4L_FSCOR','4L_23C_FSCOR','46C_FSCOR','23C_FSCOR','69C_FSCOR','iPARTS_FSCOR','5K_46C_K10_FSCOR','iPARTS_FSCOR_old','5K_46C_K30_FSCOR','5K_46C_K60_FSCOR','5K_46C_K90_FSCOR','iter02_23C_FSCOR','iter03_23C_FSCOR','iter04_23C_FSCOR','iter05_23C_FSCOR','iter02_MI_FSCOR','iter06_23C_FSCOR','iter06_MI_FSCOR','iter07_23_FSCOR','iter08_23_FSCOR','iter09_23_FSCOR','iter09_23_MI_FSCOR','iter10_23_FSCOR','iter10_23_MI_FSCOR','iter11_SARA_FSCOR','iter11_23_FSCOR','iter11_SARA2_FSCOR','iter09_SARA_FSCOR','iter12_23_FSCOR','iter09_true_FSCOR','iter09_true_SARA_FSCOR','iter10_true_FSCOR','iter11_true_FSCOR','iter12_true_FSCOR','iter13_23_FSCOR','iter14_23_FSCOR','new_23C_4L_FSCOR','final_23C_4L_FSCOR','new_SARA_23C_4L_FSCOR']
 ###TtoR setting input file 
-    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR','iter02_23C_TtoR','iter03_23C_TtoR','iter04_23C_TtoR','iter05_23C_TtoR','iter02_MI_TtoR','iter07_23_TtoR','iter08_23_TtoR','iter09_23_TtoR','iter09_23_MI_TtoR','iter10_23_TtoR','iter10_23_MI_TtoR','iter11_SARA_TtoR','iter11_23_TtoR','iter11_SARA2_TtoR','iter09_SARA_TtoR','iter12_23_TtoR','iter09_true_TtoR','iter09_true_SARA_TtoR','iter10_true_TtoR','iter11_true_TtoR','iter12_true_TtoR','iter13_23_TtoR','iter14_23_TtoR','final_23C_4L_TtoR']
+    TtoR_output_file = ['23C_4L_TtoR','4L_23C_TtoR','46C_TtoR','23C_TtoR','69C_TtoR','iPARTS_TtoR','5K_46C_K10_TtoR','5K_46C_K30_TtoR','new_23C_TtoR','5K_46C_K60_TtoR','5K_46C_K90_TtoR','iter02_23C_TtoR','iter03_23C_TtoR','iter04_23C_TtoR','iter05_23C_TtoR','iter02_MI_TtoR','iter07_23_TtoR','iter08_23_TtoR','iter09_23_TtoR','iter09_23_MI_TtoR','iter10_23_TtoR','iter10_23_MI_TtoR','iter11_SARA_TtoR','iter11_23_TtoR','iter11_SARA2_TtoR','iter09_SARA_TtoR','iter12_23_TtoR','iter09_true_TtoR','iter09_true_SARA_TtoR','iter10_true_TtoR','iter11_true_TtoR','iter12_true_TtoR','iter13_23_TtoR','iter14_23_TtoR','final_23C_4L_TtoR','new_SARA_23C_4L_TtoR']
     TtoR_file = ["/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/23-4L_matrix-O6E1.5-SARA_FSCOR_23C_4L_result-semiG.job/"
                  ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/4L_matrix-O15E1-SARA_FSCOR_4L_result-semiG.job/"
                  ,"/home/watchlee/Research_Programming/iPARTS2_training/alignment_main/matrix-O4E3.5-FSCOR-semiG.job/"
@@ -1870,7 +1876,8 @@ if __name__ =='__main__':
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_true_iter12_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter13_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
                   ,'/home/watchlee/Research_Programming/RMSD/alignment_main/iPARTS2_23_iter14_matrix-O8E1-iPARTS2_23C_SARA_FSCOR-semiG.job/'
-                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O9E1-SARA_FSCOR_23C_4L_result-semiG.job/']
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/23-4L_matrix-O9E1-SARA_FSCOR_23C_4L_result-semiG.job/'
+                  ,'/home/watchlee/Research_Programming/RMSD/alignment_main/SARA_23C_4L_matrix-O8E2-SARA_FSCOR_new_23C_4L-semiG.job/']
     F_index =0
     T_index =17  
     TtoR_document_path = TtoR_file[T_index]
@@ -1892,7 +1899,18 @@ if __name__ =='__main__':
     #lost_FSCOR_Process(FSCOR_file[5],FSCOR_output_file[5])
     #lost_FSCOR_Process(FSCOR_file[-1],FSCOR_output_file[-1])
     #FSCOR_Process(FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1])
-    #FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
+    #------------without intersection
+    #FSCOR_Process(without_intersection_FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1])
+   # FSCOR_Process(without_intersection_FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
+
+    #FSCOR_Process(FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1])
+    FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
+    PSI_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'C3')
+    PSI_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'P')
+    PSI_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'S')
+    #PSI_TtoR_Process(TtoR_list,TtoR_file[-2],TtoR_output_file[-2],'C3')
+    #PSI_TtoR_Process(TtoR_list,TtoR_file[-2],TtoR_output_file[-2],'P')
+    #PSI_TtoR_Process(TtoR_list,TtoR_file[-2],TtoR_output_file[-2],'S')
     #FSCOR_Process(FSCOR_list,FSCOR_file[3],FSCOR_output_file[3])
     #FSCOR_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5])
     #Raw_FSCOR_Process(FSCOR_list,FSCOR_file[0],FSCOR_output_file[0])
@@ -1912,6 +1930,7 @@ if __name__ =='__main__':
     #other_PSI_Process(FSCOR_list,'/home/millard/iPARTS2/alignment/setter/SARA_FSCOR_PSI_ALLATOM/','SETTER_FSCOR')
     #other_PSI_Process(FSCOR_list,'/home/millard/iPARTS2/alignment/setter/SARA_FSCOR_253/','SETTER_FSCOR')
     #-------------fuck fuck fuck fuck fuck  ah....this code is used to run RASS data
+    '''
     RASS_PSI_Process('/home/millard/iPARTS2/alignment/RASS/SARA_FSCOR_PSI_ALL/','RASS_TtoR','S','TtoR')
     RASS_PSI_Process('/home/millard/iPARTS2/alignment/RASS/SARA_FSCOR_PSI_C3/','RASS_TtoR','C3','TtoR')
     RASS_PSI_Process('/home/millard/iPARTS2/alignment/RASS/SARA_FSCOR_PSI_P/','RASS_TtoR','P','TtoR')
@@ -1924,18 +1943,23 @@ if __name__ =='__main__':
     RASS_PSI_Process('/home/millard/iPARTS2/alignment/setter/SARA_FSCOR_PSI_ALLATOM/','SETTER_FSCOR','S','FSCOR')
     RASS_PSI_Process('/home/millard/iPARTS2/alignment/setter/SARA_FSCOR_PSI_ATOM_C3/','SETTER_FSCOR','C3','FSCOR')
     RASS_PSI_Process('/home/millard/iPARTS2/alignment/setter/SARA_FSCOR_PSI_ATOM_P/','SETTER_FSCOR','P','FSCOR')
-
+    '''
     #FORCOMMENT_TFSCOR_Process(TFSCOR_list,'/home/watchlee/Research_Programming/RMSD/alignment_main/comment_23-4L-O15E5-SARA_T_23-4L-semiG.job/','23-4L_TFSCOR')
     #FORCOMMENT_TFSCOR_Process(TFSCOR_list,'/home/watchlee/Research_Programming/RMSD/alignment_main/comment_iPARTS-O15E5-SARA_T_iPARTS-semiG.job/','iPARTS_TFSCOR')
     #lost_TtoR_Process(TtoR_file[-1],TtoR_output_file[-1])
     #PSI_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'C3')
     #PSI_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'P')
     #PSI_Process(FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'S')
+    #PSI_Process(without_intersection_FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'C3')
+    #PSI_Process(without_intersection_FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'P')
+    #PSI_Process(without_intersection_FSCOR_list,FSCOR_file[5],FSCOR_output_file[5],'S')
+    #PSI_Process(without_intersection_FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1],'C3')
+    #PSI_Process(without_intersection_FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1],'P')
+    #PSI_Process(without_intersection_FSCOR_list,FSCOR_file[-1],FSCOR_output_file[-1],'S')
     '''
     PSI_TtoR_Process(TtoR_list,TtoR_file[3],TtoR_output_file[3],'C3')
     PSI_TtoR_Process(TtoR_list,TtoR_file[3],TtoR_output_file[3],'P')
     PSI_TtoR_Process(TtoR_list,TtoR_file[3],TtoR_output_file[3],'S')
-    '''
     lost_PSI_TtoR_Process(TtoR_file[5],TtoR_output_file[5],'C3')
     lost_PSI_TtoR_Process(TtoR_file[5],TtoR_output_file[5],'P')
     lost_PSI_TtoR_Process(TtoR_file[5],TtoR_output_file[5],'S')
@@ -1952,7 +1976,6 @@ if __name__ =='__main__':
     #lost_TtoR_Process(TtoR_file[5],TtoR_output_file[5])
     #lost_TtoR_Process(TtoR_file[-1],TtoR_output_file[-1])
 
-    '''
 
     '''
     處理完整跟不完整(6萬筆,跟廢物RASS比較用的)資料有兩種方法可以用 
